@@ -11,7 +11,7 @@
 * Big "ENGAGE HYPER-GRADUS": Calculates and shows you the next available notes in .5 opacity across the whole cf, those options update and are constrained as more notes are entered.
 
 
-## Prototype constraints
+### Prototype constraints
 
 Let's not make this too hard on ourselves...
 
@@ -30,7 +30,7 @@ Let's not make this too hard on ourselves...
 * Adjustable playback speed and instrument
 * Ability to input cantus firmi of varying lengths, select from several libraries, have it be in bass clef
 
-### Tech to evaluate
+## Tech to evaluate
 
 * https://github.com/madrobby/keymaster (simplest way to do keybindings)
 * https://github.com/gasman/jasmid (simplest midi)
