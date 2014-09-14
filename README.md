@@ -4,7 +4,7 @@
 
 * On the page we see two treble clefs of 11 bars, fits within 1100px width max.
 * Provides one hardcoded canctus firmus in treble clef using whole notes on the bottom staff
-* Allows input of counterpoint (top staff) by mouse, directly on the staff. You can input on any bar, not limited to "the next empty place"
+* Allows input of counterpoint (top staff) by mouse, directly on the staff. You can input on any bar, not limited to "the next empty place" (but will this cause problems with the "hyper-gradus" as described below?)
 * Allows notes to be clicked and dragged to be moved up or down on the stave (not left/right though, fuck that) as well as deleted somehow (click to select and then hit delete button? drag off the staves?)
 * Press play to hear the two voices from the start in shitty midi (ideally bind spacebar to play/stop) — as the notes are played, they are highlighted. 
 * After note input, writes the resultant interval above the canctus firmus stave in a small font to help you out (see the book for what this looks like)
@@ -15,10 +15,10 @@
 
 Let's not make this too hard on ourselves...
 
-* Both cantus and counterpoint in treble clef
-* Let's stick with 11 bars as a set to start
+* Both cantus and counterpoint in treble clef, C Major, whole notes, no time sig (or 4/4 if it's easiest)
+* Let's stick with 11 bars to start (matches the book)
 * Let's provide Cantus Firmus in lower voice only for now (it can also be the upper)
-* First species only, but prepare for the next species
+* First species only, but prepare for the next species when writing the program. 
 
 
 ### 1.0 and beyond
