@@ -1,5 +1,3 @@
-  
-
 ## Definitions 
 
 ```
@@ -55,6 +53,9 @@ Note against note (lets use whole notes in examples)
   SHOULD NOT "battuta" — contract from 10th to an octave stepwise
   SHOULD NOT leap to an octave consonance from a more "remote" consonance (except with many voices, the bass can do this)
   SHOULD NOT travel stepwise for a total of a tritone (ok if the voice goes beyond the tritone, this requires looking behind 4 notes...)
+
+  Second to last note MUST be a major sixth (assuming cantus firmus is in the lower voice, otherwise minor 3rd. Another way of enforcing this is that the actual note must be a leading tone, raised 7th)
+
 ```
 
 ## Second Species
