@@ -43,4 +43,4 @@ Let's not make this too hard on ourselves...
 
 ## Resources
 * [The latin version of Gradus](http://conquest.imslp.info/files/imglnks/usimg/f/fd/IMSLP91138-PMLP187246-Fux_-_Gradus_ad_Parnassum.pdf)
-* ["One of the first examples of counterpoint we have. Leonin was the very first "composer"](https://www.youtube.com/watch?v=fVjo_mhcGG8)
+* ["One of the first examples of counterpoint we have. Leonin was the very first 'composer'"](https://www.youtube.com/watch?v=fVjo_mhcGG8)
