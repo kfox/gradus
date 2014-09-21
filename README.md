@@ -23,7 +23,7 @@ Let's not make this too hard on ourselves...
 
 ### 1.0 and beyond (dat icebox)
 
-* Implement rules for species 2-5, with a toggle switch to change species mid-input. The toughest part (I predict) will be the entry and display of more complex note values (perhaps just a toggle for entry). The place I imagine it getting hairy is placing notes and the horizontal sensitivy on the staff, etc. Before we let people plunk down whole notes wherever, but what happens when they select eighth notes and click on the middle of the bar? Perhaps you can only enter notes in a bar from left to right but you can put notes in any bar.)
+* Implement rules for species 2-5, with a toggle switch to change species mid-input. The toughest part (I predict) will be the entry and display of more complex note values (perhaps just a toggle for entry). The place I imagine it getting hairy is placing notes and the horizontal sensitivy on the staff, etc. Before, we let people plunk down whole notes wherever — but what happens when they select eighth notes and click on the middle of the bar? Perhaps we can only enter notes in a bar from left to right (but we can enter notes in any bar)
 * Lets you "lock" input to only notes obeying the rules
 * Shows you which rules were broken (!?)
 * Lets you open a pane to specific toggle rules on/off
