@@ -40,5 +40,7 @@ Let's not make this too hard on ourselves...
 * http://www.noteflight.com (check out how they implement notation input)
 * Who the fuck does "inputting notes on a staff" in HTML5 — nobody? 
 
+
 ## Resources
 * [The latin version of Gradus](http://conquest.imslp.info/files/imglnks/usimg/f/fd/IMSLP91138-PMLP187246-Fux_-_Gradus_ad_Parnassum.pdf)
+* ["One of the first examples of counterpoint we have. Leonin was the very first "composer"](https://www.youtube.com/watch?v=fVjo_mhcGG8)
