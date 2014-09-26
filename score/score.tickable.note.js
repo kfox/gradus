@@ -5,7 +5,7 @@ Score.Note.prototype = new Score.Tickable();
 Score.Note.prototype.type = 'Note';
 
 Score.Note.prototype.ord = function(chromatic) {
-    // Middle C = 21
+    // if chromatic, Middle C = 60
     var mdata, shift = 0;
     var octshift = chromatic ? 12 : 7;
     var note = this.opts.pitch.match(/([A-Ga-g][,']*)/)[1];
@@ -17,8 +17,8 @@ Score.Note.prototype.ord = function(chromatic) {
     var bases;
     if (chromatic)
         bases = {
-            'C': 21, 'D': 23, 'E': 25, 'F': 26, 'G': 28, 'A': 30, 'B': 32,
-            'c': 33, 'd': 35, 'e': 37, 'f': 38, 'g': 40, 'a': 42, 'b': 44
+            'C': 60, 'D': 62, 'E': 64, 'F': 65, 'G': 67, 'A': 69, 'B': 71,
+            'c': 72, 'd': 74, 'e': 76, 'f': 77, 'g': 79, 'a': 81, 'b': 83
         };
     else
         bases = {
