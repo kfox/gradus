@@ -61,8 +61,8 @@ Score.StaffElement.prototype.render = function(svg, x, y) {
 
 Score.StaffElement.prototype.bindListeners = function() {
     var self = this, score = this.score;
-    this.avatar.click(function(e) {
-        if (score.eventListeners['staff_element.click'])
-            score.eventListeners['staff_element.click'].call(self, e);
+    this.avatar.mousedown(function(e) {
+        if (score.eventListeners['staff_element.mousedown'])
+            score.eventListeners['staff_element.mousedown'].call(self, e);
     });
 };

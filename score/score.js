@@ -46,7 +46,16 @@ Score.prototype.render = function(container, options) {
         yoffset += Score.Staff.VERTICAL_PADDING/2;
     }
 
-    this.eventListeners = options.events || {};
+    var self = this;
+    var events = this.eventListeners = options.events || {};
+    svg.mouseup(function(e) {
+        if (events['score.mouseup'])
+            events['score.mouseup'].call(self, e);
+    });
+    svg.mousemove(function(e) {
+        if (events['score.mousemove'])
+            events['score.mousemove'].call(self, e);
+    });
 };
 
 Score.prototype.reformatLine = function(n, x) {

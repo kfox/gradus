@@ -6,10 +6,14 @@ Score.Note.prototype = new Score.Tickable();
 Score.Note.prototype.type = 'Note';
 
 Score.Note.prototype.ord = function(chromatic) {
+    return Score.Note.pitchToOrd(this.opts.pitch, chromatic);
+};
+
+Score.Note.pitchToOrd = function(pitch, chromatic) {
     // if chromatic, Middle C = 60
     var mdata, shift = 0;
     var octshift = chromatic ? 12 : 7;
-    var note = this.opts.pitch.match(/([A-Ga-g][,']*)/)[1];
+    var note = pitch.match(/([A-Ga-g][,']*)/)[1];
     while((mdata = note.match(/[,']/))) {
         note = note.replace(/[,']/, '');
         shift += (mdata[0] == ',') ? -octshift : octshift;
@@ -27,6 +31,24 @@ Score.Note.prototype.ord = function(chromatic) {
             'c': 28, 'd': 29, 'e': 30, 'f': 31, 'g': 32, 'a': 33, 'b': 34
         };
     return bases[key] + shift;
+};
+
+Score.Note.ordToPitch = function(ord) {
+    // There's no chromatic version of this method
+    var shift = '';
+    while (ord < 21) {
+        shift += ",";
+        ord += 7;
+    }
+    while (ord > 34) {
+        shift += "'";
+        ord -= 7;
+    }
+    var bases = {
+        21: 'C', 22: 'D', 23: 'E', 24: 'F', 25: 'G', 26: 'A', 27: 'B',
+        28: 'c', 29: 'd', 30: 'e', 31: 'f', 32: 'g', 33: 'a', 34: 'b'
+    };
+    return bases[ord] + shift;
 };
 
 Score.Note.prototype.glyphValue = function() {
