@@ -23,12 +23,9 @@ Score.Part.prototype.line = function(i) {
         return [];
 
     var line = [];
-    for (; el && el.type != 'Break'; el = el.next) {
-        if (el.type == 'Bar')
-            line.push(new Score.Measure());
-        if (!line.length)
-            line.push(new Score.Measure());
-        line[line.length-1].push(el);
+    while (el && el.type != 'Break') {
+        line.push(el.measure);
+        el = el.findNext('Bar', 'Break');
     }
 
     return line;
@@ -54,7 +51,7 @@ Score.Part.prototype.findAll = function(type) {
 Score.Part.prototype.add = function(element) {
     var measure = this.measures[this.measures.length-1];
     if (!measure || element.isBar())
-        measure = this.measures[this.measures.length] = new Score.Measure();
+        measure = this.measures[this.measures.length] = new Score.Measure(this);
 
     measure.push(element);
     element.part = this;
@@ -164,6 +161,7 @@ Score.Part.renderAll = function(svg, voices, yoffset) {
     for (var measure, i=0; i < nvoices; ++i) {
         for (var j=0; j < voices[i][1].length; ++j) {
             measure = voices[i][1][j];
+            measure.renderXOffset = xoffset;
             measure.prerender(svg, yoffset+i*(staffHeight+staffPadding));
         }
     }

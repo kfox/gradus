@@ -58,3 +58,11 @@ Score.StaffElement.prototype.render = function(svg, x, y) {
     this.avatar = svg.group();
     return x;
 };
+
+Score.StaffElement.prototype.bindListeners = function() {
+    var self = this, score = this.score;
+    this.avatar.click(function(e) {
+        if (score.eventListeners['staff_element.click'])
+            score.eventListeners['staff_element.click'].call(self, e);
+    });
+};

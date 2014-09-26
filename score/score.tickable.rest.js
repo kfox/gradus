@@ -11,4 +11,5 @@ Score.Rest.prototype.render = function(svg, x, y) {
     var box = rest.bbox();
     rest.move(x + box.width/2, y + 2*Score.Staff.LINE_HEIGHT - box.height/2);
     this.avatar = rest;
+    this.bindListeners();
 };

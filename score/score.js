@@ -28,7 +28,7 @@ Score.prototype.getAllStaves = function(line) {
     return set;
 };
 
-Score.prototype.render = function(container) {
+Score.prototype.render = function(container, options) {
     $(container).css('width', '1000px').empty();
 
     var svg = SVG(container);
@@ -39,9 +39,21 @@ Score.prototype.render = function(container) {
     var nstaves = this.countStaves();
     for (var set, i=0; i < nstaves; ++i) {
         set = this.getAllStaves(i);
+        for (var j=0; j < set.length; ++j)
+            for (var k=0; k < set[i][1].length; ++k)
+                set[j][1][k].renderLineNumber = i;
         yoffset = Score.Part.renderAll(svg, set, yoffset);
         yoffset += Score.Staff.VERTICAL_PADDING/2;
     }
+
+    this.eventListeners = options.events || {};
+};
+
+Score.prototype.reformatLine = function(n, x) {
+    var voices = this.getAllStaves(n);
+    for (var i=0; i < voices.length; ++i)
+        voices[i] = $.map(voices[i][1], function(x){ return x.elements });
+    new Score.Formatter(voices).format(x);
 };
 
 Score.prototype.parseABC = function(abc) {

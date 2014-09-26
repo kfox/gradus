@@ -1,5 +1,6 @@
 Score.Note = function(opts) {
     this.opts = opts;
+    this.opts.accidentals = this.opts.accidentals || '';
 };
 Score.Note.prototype = new Score.Tickable();
 Score.Note.prototype.type = 'Note';
@@ -130,4 +131,5 @@ Score.Note.prototype.render = function(svg, x, y) {
               Score.Staff.LINE_HEIGHT/2);
 
     this.avatar = ball;
+    this.bindListeners();
 };

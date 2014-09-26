@@ -4,7 +4,7 @@ Score.Tickable = function() {
 
 Score.Tickable.prototype = new Score.StaffElement();
 
-Score.Tickable.prototype.triplet = function() {
+Score.Tickable.prototype.isTriplet = function() {
     var x = this.findPrev('TupletBegin', {neighbor: true});
     for (var i = 0; x && i < 3; ++i) {
         x = x.findNext('Tickable', {neighbor: true});
@@ -28,7 +28,7 @@ Score.Tickable.prototype.ticks = function() {
         ticks *= parseInt(opts.value);
     }
 
-    if (this.triplet()) {
+    if (this.isTriplet()) {
         switch(ticks) {
         case Score.QUAVER:
             return Score.QUAVER_TRIPLET;
