@@ -86,7 +86,8 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
             }
             e = e.findNext('Tickable');
         }
-        track.writeData('00ff2f00'); // end of track
+        track.writeData(toHex(delta));
+        track.writeData('ff2f00'); // end of track
     });
 };
 
