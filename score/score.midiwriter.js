@@ -45,15 +45,14 @@ Score.MidiWriter.prototype.writeHeader = function() {
     this.writeData('00000006');
     this.writeData('0001'); // midi type 1 (multiple tracks)
     this.writeData(toHex(this.model.parts.length, 4)); // number of tracks
-    //this.writeData('3c00'); // 15360 ticks per quarter note
-    this.writeData('0140'); // 15360 ticks per quarter note
+    this.writeData('7800'); // Score.CROCHET ticks per quarter note
 };
 
 Score.MidiWriter.prototype.trackChunk = function(writer) {
     this.writeData('4D54726B'); // "MTrk"
 
     var eventData = '';
-    writer({
+    writer.call(this, {
         writeData: function(data) {
             eventData += data;
         }
@@ -81,7 +80,7 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
                 track.writeData(toHex(e.ord(true), 2)); // note number
                 track.writeData('7f'); // velocity
 */
-                delta = 4 * 320; // e.ticks();
+                delta = e.ticks();
             }
             e = e.findNext('Tickable');
         }
