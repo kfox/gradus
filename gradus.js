@@ -8,6 +8,11 @@ $(document).ready(function() {
         instrument: 'acoustic_grand_piano',
         soundfontUrl: 'soundfont/',
         callback: function() {
+            MIDI.Player.addListener(function(data) {
+                if (data.now >= data.end)
+                    MIDI.Player.stop();
+            });
+
             key('space', function(e) {
                 e.preventDefault();
 
@@ -16,10 +21,6 @@ $(document).ready(function() {
 
                 var midi_data = new Score.MidiWriter(score).writeMidi();
                 MIDI.Player.loadFile(midi_data);
-                MIDI.Player.addListener(function(data) {
-                    if (data.now >= data.end)
-                        MIDI.Player.stop();
-                });
                 MIDI.Player.start();
             });
         }
