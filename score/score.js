@@ -111,7 +111,7 @@ Score.prototype.parseABC = function(abc) {
         }
         if ((elements = lines[i].match(/\[V:([^\]]+)\]/))) {
             part = this.part($.trim(elements[1]));
-            lines[i] = lines[i].substr(elements[0].length);
+            lines[i] = $.trim(lines[i]).substr(elements[0].length);
         }
 
         if (!this.parts.length)
