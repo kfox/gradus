@@ -81,13 +81,18 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
                 track.writeData(toHex(e.ord(true), 2)); // note number
                 track.writeData('7f'); // velocity
 */
-
                 delta = 4 * 320; // e.ticks();
             }
             e = e.findNext('Tickable');
         }
-        track.writeData(toHex(delta));
-        track.writeData('ff2f00'); // end of track
+
+        // Silent 0-length note to finish the track
+        track.writeData(toHex(delta)); // delta time
+        track.writeData('91'); // note on, channel 1
+        track.writeData(toHex(60, 2)); // note number
+        track.writeData('00'); // velocity (127)
+
+        track.writeData('00ff2f00'); // end of track
     });
 };
 
