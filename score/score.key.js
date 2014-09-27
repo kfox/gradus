@@ -4,61 +4,61 @@ Score.Key = function() {
 Score.Key.prototype = new Score.StaffElement();
 Score.Key.prototype.type = 'Key';
 Score.Key.prototype.clone = function() {
-    var k = new Score.Key;
-    k.sharps = this.sharps.slice(0);
-    k.flats = this.flats.slice(0);
-    k.names = this.names.slice(0);
-    return k;
+  var k = new Score.Key;
+  k.sharps = this.sharps.slice(0);
+  k.flats = this.flats.slice(0);
+  k.names = this.names.slice(0);
+  return k;
 };
 Score.Key.prototype.render = function(svg, xoffset, yoffset) {
-    var map = {};
-    switch(this.part.clef) {
-    case 'treble':
-        map = {
-            'a': 5,
-            'b': 4,
-            'c': 3,
-            'd': 2,
-            'e': 1,
-            'f': 0,
-            'g': -1
-        };
-        break;
-    case 'bass':
-        map = {
-            'a': 7,
-            'b': 6,
-            'c': 5,
-            'd': 4,
-            'e': 3,
-            'f': 2,
-            'g': 1
-        };
-        break;
-    }
+  var map = {};
+  switch(this.part.clef) {
+  case 'treble':
+    map = {
+      'a': 5,
+      'b': 4,
+      'c': 3,
+      'd': 2,
+      'e': 1,
+      'f': 0,
+      'g': -1
+    };
+    break;
+  case 'bass':
+    map = {
+      'a': 7,
+      'b': 6,
+      'c': 5,
+      'd': 4,
+      'e': 3,
+      'f': 2,
+      'g': 1
+    };
+    break;
+  }
 
-    var sharp = Glyph.glyphs['accidentals.sharp'];
-    var flat = Glyph.glyphs['accidentals.flat'];
-    for (var y, i=0; i < this.sharps.length; ++i, xoffset += 10) {
-        y = -sharp.h/2 + map[this.sharps[i]] * Score.Staff.LINE_HEIGHT/2;
-        svg.path(sharp.d).move(xoffset, y + yoffset)
-    }
+  var sharp = Glyph.glyphs['accidentals.sharp'];
+  var flat = Glyph.glyphs['accidentals.flat'];
+  for (var y, i=0; i < this.sharps.length; ++i, xoffset += 10) {
+    y = -sharp.h/2 + map[this.sharps[i]] * Score.Staff.LINE_HEIGHT/2;
+    svg.path(sharp.d).move(xoffset, y + yoffset)
+  }
 
-    for (var y, i=0; i < this.flats.length; ++i, xoffset += 10) {
-        y = -3*flat.h/4 + map[this.flats[i]] * Score.Staff.LINE_HEIGHT/2;
-        svg.path(flat.d).move(xoffset, y + yoffset)
-    }
+  for (var y, i=0; i < this.flats.length; ++i, xoffset += 10) {
+    y = -3*flat.h/4 + map[this.flats[i]] * Score.Staff.LINE_HEIGHT/2;
+    svg.path(flat.d).move(xoffset, y + yoffset)
+  }
 
-    return xoffset + 5;
+  return xoffset + 5;
 };
 
 Score.Key.parse = function(key) {
-    for (var k in Score.Keys) {
-        if (Score.Keys[k].names.indexOf(key) != -1)
-            return Score.Keys[k];
-    }
+  for (var k in Score.Keys) {
+    if (Score.Keys[k].names.indexOf(key) != -1)
+      return Score.Keys[k];
+  }
 
-    throw "Unrecognized key: "+key;
+  throw "Unrecognized key: "+key;
 };
 
 Score.Keys = {};
