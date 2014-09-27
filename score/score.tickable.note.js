@@ -138,6 +138,14 @@ Score.Note.prototype.isNatural = function() {
     return this.opts.accidentals.indexOf('=') != -1;
 };
 
+Score.Note.prototype.interval = function(note) {
+    var myOrd = this.ord();
+    var itsOrd = note.ord();
+    if (myOrd < itsOrd)
+        return 1 + itsOrd - myOrd;
+    return 1 + myOrd - itsOrd;
+};
+
 Score.Note.prototype.render = function(svg, x, y) {
     var position = this.part.place(this);
     y = y + position * Score.Staff.LINE_HEIGHT / 2;

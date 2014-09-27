@@ -4,9 +4,11 @@ Score.Measure = function(voice) {
     this.part = voice;
 };
 
+Score.Measure.prototype = new Score.Set();
+
 Score.Measure.prototype.push = function(x) {
-    x.measure = this;
     this.elements.push(x);
+    x.measure = this;
 };
 
 Score.Measure.prototype.replace = function(el, newel) {
@@ -33,16 +35,6 @@ Score.Measure.prototype.replace = function(el, newel) {
     this.part.score.reformatLine(this.renderLineNumber, this.renderXOffset);
 };
 
-// Return a new measure, with the elements of this measure
-// filtered to only a specific type
-Score.Measure.prototype.filter = function(type) {
-    var set = new Score.Measure();
-    for (var i = 0; i < this.elements.length; ++i)
-        if (this.elements[i].isA(type))
-            set.push(this.elements[i]);
-    return set;
-};
-
 Score.Measure.prototype.renderBeams = function(svg) {
     for (var start, end, i=0; i < this.elements.length; ++i) {
         if (this.elements[i].type != 'Note')
@@ -57,6 +49,15 @@ Score.Measure.prototype.renderBeams = function(svg) {
 
 Score.Measure.prototype.prerender = function(svg, yoffset) {
     this.renderYOffset = yoffset;
-    for (var i=0; i < this.elements.length; ++i)
-        this.elements[i].render(svg, 0, yoffset);
+    for (var e, g, below, i=0; i < this.elements.length; ++i) {
+        e = this.elements[i];
+        e.render(svg, 0, yoffset);
+        if (!this.part.score.options.showIntervals)
+            continue;
+        if (e.type == 'Note' && (below = this.part.below(e))) {
+            if (below.type != 'Note')
+                continue;
+            below.addText(''+below.interval(e));
+        }
+    }
 };

@@ -35,6 +35,8 @@ Score.prototype.render = function(container, options) {
     svg.size($(container).width(), 1600);
     svg0 = svg;
 
+    this.options = options;
+
     var yoffset = 64;
     var nstaves = this.countStaves();
     for (var set, i=0; i < nstaves; ++i) {
@@ -47,7 +49,7 @@ Score.prototype.render = function(container, options) {
     }
 
     var self = this;
-    var events = this.eventListeners = options.events || {};
+    var events = this.eventListeners = this.options.events || {};
     svg.mouseup(function(e) {
         if (events['score.mouseup'])
             events['score.mouseup'].call(self, e);

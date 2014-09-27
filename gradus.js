@@ -8,8 +8,10 @@ $(document).ready(function() {
     var dragPitch;
     var dragging = null;
     score.render($('#score')[0], {
+        showIntervals: true,
         events: {
             'staff_element.mousedown': function(e) {
+                e.preventDefault();
                 if (this.type == 'Note') {
                     dragStartY = e.screenY;
                     dragPitch = this.ord();
@@ -28,9 +30,11 @@ $(document).ready(function() {
                 this.measure.replace(this, dragging);
             },
             'score.mouseup': function(e) {
+                e.preventDefault();
                 dragging = null;
             },
             'score.mousemove': function(e) {
+                e.preventDefault();
                 if (!dragging)
                     return;
 

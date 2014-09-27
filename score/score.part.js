@@ -132,6 +132,32 @@ Score.Part.prototype.renderLines = function(svg, yoffset) {
         svg.path('M0,'+y+' L'+w+','+y).stroke('#000');
 };
 
+Score.Part.prototype.above = function(e) {
+    var mindex = this.measures.indexOf(e.measure);
+    var vindex = this.score.parts.indexOf(this);
+    var voiceAbove = this.score.parts[vindex-1];
+    if (!voiceAbove)
+        return null;
+
+    var m2 = voiceAbove.measures[mindex];
+    var eoffset = e.tickOffset(e.measure.elements[0]);
+    var e2 = m2.elementAtOffset(eoffset);
+    return e2;
+};
+
+Score.Part.prototype.below = function(e) {
+    var mindex = this.measures.indexOf(e.measure);
+    var vindex = this.score.parts.indexOf(this);
+    var voiceAbove = this.score.parts[vindex+1];
+    if (!voiceAbove)
+        return null;
+
+    var m2 = voiceAbove.measures[mindex];
+    var eoffset = e.tickOffset(e.measure.elements[0]);
+    var e2 = m2.elementAtOffset(eoffset);
+    return e2;
+};
+
 Score.Part.prototype.render = function(svg, yoffset) {
     var xoffset;
     this.renderLines(svg, yoffset);
