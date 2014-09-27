@@ -34,7 +34,7 @@ $(document).ready(function() {
                 if (!dragging)
                     return;
 
-                var x = 2*Math.floor((e.screenY-dragStartY)/Score.Staff.LINE_HEIGHT);
+                var x = Math.floor((e.screenY-dragStartY)/Score.Staff.LINE_HEIGHT);
                 var newPitch = Score.Note.ordToPitch(dragPitch - x);
                 if (newPitch != dragging.opts.pitch) {
                     dragging.opts.pitch = newPitch;
