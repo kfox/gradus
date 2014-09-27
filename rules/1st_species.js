@@ -7,6 +7,8 @@ Gradus.FirstSpecies.rules = [
     var cf = score.part('Cantus Firmus');
     cf.findAll('Note').forEach(function(note) {
       var counterpoint = cf.above(note);
+      if (counterpoint.type != 'Note')
+        return;
       var interval = note.interval(counterpoint);
       if (!interval.consonant)
         throw new Violation('All intervals must be consonant', counterpoint);
@@ -20,12 +22,16 @@ Gradus.FirstSpecies.rules = [
 
     var first = notes.shift();
     var counterpoint = cf.above(first);
+    if (counterpoint.type != 'Note')
+      return;
     var interval = first.interval(counterpoint);
     if (!(interval.perfect && interval.consonant))
       throw new Violation('Must start with a perfect consonance', counterpoint);
 
     var last = notes.pop();
     counterpoint = cf.above(first);
+    if (counterpoint.type != 'Note')
+      return;
     interval = last.interval(counterpoint);
     if (!(interval.perfect && interval.consonant))
       throw new Violation('Must end with a perfect consonance', counterpoint);
@@ -41,6 +47,8 @@ Gradus.FirstSpecies.rules = [
 
     notes.forEach(function(note) {
       var counterpoint = cf.above(note);
+      if (counterpoint.type != 'Note')
+        return;
       var interval = note.interval(counterpoint);
       if (interval.semitones == 0)
 	throw new Violation("Must not be unison except on first and last notes",
@@ -58,6 +66,8 @@ Gradus.FirstSpecies.rules = [
 
     var interval;
     var prev = counterpoint.find('Note');
+    if (!prev)
+      return;
     var curr = prev.findNext('Note');
     while (curr) {
       interval = prev.interval(curr);
@@ -74,6 +84,8 @@ Gradus.FirstSpecies.rules = [
 
     var interval;
     var prev = counterpoint.find('Note');
+    if (!prev)
+      return;
     var curr = prev.findNext('Note');
     while (curr) {
       interval = prev.interval(curr);
