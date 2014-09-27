@@ -1,0 +1,17 @@
+#!/bin/bash
+echo "Team Spectra, deploy!"
+ssh linode-deploy '
+  source /etc/profile;
+  source ~/.profile;
+  cd /data/melatoninstudios/gradus; 
+  
+  if [[ $(git diff) > "" ]];
+    then 
+      echo "WARNING: local changes on server, exiting!"; 
+      git diff;
+      exit 0; 
+  fi;
+  
+  git fetch; 
+  git reset --hard origin/master;
+' 
