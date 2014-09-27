@@ -139,11 +139,69 @@ Score.Note.prototype.isNatural = function() {
 };
 
 Score.Note.prototype.interval = function(note) {
-    var myOrd = this.ord();
-    var itsOrd = note.ord();
+    var myOrd = this.ord(true);
+    var itsOrd = note.ord(true);
+
+    var semitones;
     if (myOrd < itsOrd)
-        return 1 + itsOrd - myOrd;
-    return 1 + myOrd - itsOrd;
+        semitones = itsOrd - myOrd;
+    else
+        semitones = myOrd - itsOrd;
+
+    var interval = {
+        semitones: semitones,
+        type: 1 + ((myOrd < itsOrd) ? (itsOrd - myOrd) : (myOrd - itsOrd)),
+        perfect: false, consonant: false
+    };
+    interval.name = ''+interval.type;
+
+    switch(semitones) {
+    case 0:
+        interval.name ='P1';
+        interval.consonant = true;
+        interval.perfect = true;
+        break;
+    case 1:
+    case 2:
+        interval.name ='2';
+        break;
+    case 3:
+    case 4:
+        interval.name ='3';
+        interval.consonant = true;
+        break;
+    case 5:
+        interval.name ='P4';
+        interval.consonant = true;
+        interval.perfect = true;
+        break;
+    case 6:
+        interval.name ='Tri';
+        break;
+    case 7:
+        interval.name ='P5';
+        interval.consonant = true;
+        interval.perfect = true;
+        break;
+    case 8:
+    case 9:
+        interval.name ='6';
+        interval.consonant = true;
+        break;
+    case 10:
+        interval.name ='7';
+        break;
+    case 11:
+        interval.name ='7+';
+        break;
+    case 12:
+        interval.name ='P8';
+        interval.consonant = true;
+        interval.perfect = true;
+        break;
+    }
+
+    return interval;
 };
 
 Score.Note.prototype.render = function(svg, x, y) {

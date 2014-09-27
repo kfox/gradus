@@ -57,7 +57,7 @@ Score.Measure.prototype.prerender = function(svg, yoffset) {
         if (e.type == 'Note' && (below = this.part.below(e))) {
             if (below.type != 'Note')
                 continue;
-            below.addText(''+below.interval(e));
+            below.addText(below.interval(e).name);
         }
     }
 };
