@@ -96,6 +96,20 @@ Gradus.FirstSpecies.rules = [
     }
   },
 
+  // Must not move by parallel motion into perfect consonance
+  function(score) {
+    var cf = score.part('Cantus Firmus');
+    var counterpoint = score.parts[0];
+    var intervals = intervalSequence(cf, counterpoint);
+    for (var i=0; i < intervals.length; ++i) {
+      if (intervals[i].motion != 'parallel')
+        continue;
+      if (intervals[i].destination.perfect && intervals[i].destination.consonant)
+        throw new Violation('Parallel motion must not result in a perfect consonance',
+                            intervals[i].notes[1], intervals[i].destination.notes[1]);
+    }
+  },
+
   // Should not battuta (contract from 10th to 8ve stepwise)
   function() { },
 
@@ -108,3 +122,45 @@ Gradus.FirstSpecies.rules = [
   // Second to last note MUST be a major sixth (?)
   function() { }
 ];
+
+
+function intervalSequence(bass, counterpoint) {
+  var above, below;
+  above = counterpoint.find('Tickable');
+
+  var events = [];
+  while (above) {
+    below = above.measure.part.below(above);
+    if (above.type == 'Note' && below.type == 'Note')
+      events.push([below, above]);
+    above = above.findNext('Tickable');
+  }
+
+  for (var n1, n2, i=0; i < events.length; ++i) {
+    n1 = events[i][0].findNext('Tickable');
+    n2 = events[i][1].findNext('Tickable');
+    if (!n1 || !n2 || n1.type != 'Note' || n2.type != 'Note')
+      events.splice(i, 1);
+  }
+
+  var intervals = [];
+  for (var interval, n1, n2, m1, m2, i=0; i < events.length; ++i) {
+    below = events[i][0];
+    above = events[i][1];
+    n1 = below.findNext('Note');
+    n2 = above.findNext('Note');
+    m1 = below.motion(n1);
+    m2 = above.motion(n2);
+    interval = below.interval(above);
+    interval.destination = n1.interval(n2);
+    if (m1 == m2)
+      interval.motion = 'parallel';
+    else if (m1 != 'none' && m2 != 'none')
+      interval.motion = 'contrary';
+    else
+      interval.motion = 'oblique';
+    intervals.push(interval);
+  }
+
+  return intervals;
+};

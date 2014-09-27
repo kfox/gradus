@@ -138,6 +138,16 @@ Score.Note.prototype.isNatural = function() {
   return this.opts.accidentals.indexOf('=') != -1;
 };
 
+Score.Note.prototype.motion = function(note) {
+  var myOrd = this.ord(true);
+  var itsOrd = note.ord(true);
+  if (myOrd < itsOrd)
+    return 'ascending';
+  if (itsOrd < myOrd)
+    return 'descending';
+  return 'none';
+};
+
 Score.Note.prototype.interval = function(note) {
   var myOrd = this.ord(true);
   var itsOrd = note.ord(true);
@@ -149,11 +159,10 @@ Score.Note.prototype.interval = function(note) {
     semitones = myOrd - itsOrd;
 
   var interval = {
+    notes: (myOrd < itsOrd) ? [this, note] : [note, this],
     semitones: semitones,
-    type: 1 + ((myOrd < itsOrd) ? (itsOrd - myOrd) : (myOrd - itsOrd)),
     perfect: false, consonant: false
   };
-  interval.name = ''+interval.type;
 
   switch(semitones) {
   case 0:

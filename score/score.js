@@ -32,13 +32,16 @@ Score.prototype.render = function(container, options) {
   $(container).css('width', '1000px').empty();
 
   var svg = SVG(container);
-  svg.size($(container).width(), 1600);
+  var nstaves = this.countStaves();
+  var nvoices = this.parts.length;
+  var requiredHeight = Score.Staff.HEIGHT + Score.Staff.VERTICAL_PADDING;
+  requiredHeight *= (nstaves * nvoices) + 1;
+  svg.size($(container).width(), requiredHeight);
   svg0 = svg;
 
   this.options = options;
 
   var yoffset = 64;
-  var nstaves = this.countStaves();
   for (var set, i=0; i < nstaves; ++i) {
     set = this.getAllStaves(i);
     for (var j=0; j < set.length; ++j)

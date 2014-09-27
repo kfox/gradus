@@ -30,6 +30,7 @@ $(document).ready(function() {
         dragPitch = dragging.ord();
 
         this.measure.replace(this, dragging);
+        Gradus.FirstSpecies.notify(score, $('#messages'));
       },
       'score.mouseup': function(e) {
         e.preventDefault();
@@ -45,12 +46,11 @@ $(document).ready(function() {
         if (newPitch != dragging.opts.pitch) {
           dragging.opts.pitch = newPitch;
           dragging.measure.replace(dragging, dragging);
+          Gradus.FirstSpecies.notify(score, $('#messages'));
         }
       }
     }
   });
-
-  console.log(Gradus.FirstSpecies.check(score));
 
   MIDI.loadPlugin({
     instrument: 'acoustic_grand_piano',
