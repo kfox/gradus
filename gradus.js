@@ -1,8 +1,10 @@
 
+
+Gradus = {};
+
 $(document).ready(function() {
     var source = $('#score').text();
     var score = Score.parseABC(source);
-
 
     var dragStartY;
     var dragPitch;
@@ -47,6 +49,8 @@ $(document).ready(function() {
             }
         }
     });
+
+    console.log(Gradus.FirstSpecies.check(score));
 
     MIDI.loadPlugin({
         instrument: 'acoustic_grand_piano',

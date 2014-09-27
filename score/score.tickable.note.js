@@ -172,11 +172,11 @@ Score.Note.prototype.interval = function(note) {
         break;
     case 5:
         interval.name ='P4';
-        interval.consonant = true;
         interval.perfect = true;
         break;
     case 6:
         interval.name ='Tri';
+        interval.tritone = true;
         break;
     case 7:
         interval.name ='P5';

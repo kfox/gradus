@@ -11,6 +11,10 @@ Score.Part.prototype.first = function() {
     return this.measures && this.measures[0].elements[0];
 };
 
+Score.Part.prototype.last = function() {
+    return this.measures && this.measures[0].elements[0];
+};
+
 Score.Part.prototype.line = function(i) {
     var el;
     if (i == 0) {
