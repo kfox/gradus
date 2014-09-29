@@ -58,7 +58,6 @@ Score.StaffElement.prototype.findPrev = function(type, opts) {
 
 Score.StaffElement.prototype.render = function(svg, x, y) {
   this.avatar = svg.group();
-  return x;
 };
 
 Score.StaffElement.prototype.toABC = function() {

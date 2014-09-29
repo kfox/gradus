@@ -129,17 +129,14 @@ Score.Part.prototype.renderClef = function(svg, yoffset) {
 Score.Part.prototype.renderKey = function(svg, xoffset, yoffset) {
   var key = this.score.key.clone();
   key.part = this;
-  return key ? key.render(svg, xoffset, yoffset) : xoffset;
+  return key.render(svg, xoffset, yoffset);
 };
 
 Score.Part.prototype.renderMeter = function(svg, xoffset, yoffset) {
-  var meter = this.meterWasRendered ? false : this.score.meter;
-  this.meterWasRendered = true;
-  return meter ? meter.render(svg, xoffset, yoffset) : xoffset;
+  return this.score.meter.render(svg, xoffset, yoffset);
 };
 
-Score.Part.prototype.renderLines = function(svg, yoffset) {
-  var w = svg.width();
+Score.Part.prototype.renderLines = function(svg, yoffset, w) {
   for (var i=0, y = yoffset; i < 5; ++i, y += Score.Staff.LINE_HEIGHT)
     svg.path('M0,'+y+' L'+w+','+y).stroke('#000');
 };
@@ -172,11 +169,12 @@ Score.Part.prototype.below = function(e) {
 
 Score.Part.prototype.render = function(svg, yoffset) {
   var xoffset;
-  this.renderLines(svg, yoffset);
-  xoffset = this.renderClef(svg, yoffset);
-  xoffset = this.renderKey(svg, xoffset, yoffset);
-  xoffset = this.renderMeter(svg, xoffset, yoffset);
-  return xoffset;
+  this.avatar = svg.group();
+  this.renderLines(this.avatar, yoffset, svg.width());
+  xoffset = this.renderClef(this.avatar, yoffset);
+  xoffset = this.renderKey(this.avatar, xoffset, yoffset);
+  xoffset = this.renderMeter(this.avatar, xoffset, yoffset);
+  return xoffset + 15;
 };
 
 Score.Part.prototype.toABC = function(measures) {

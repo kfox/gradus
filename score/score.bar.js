@@ -9,5 +9,4 @@ Score.Bar.prototype.toABC = function() {
 
 Score.Bar.prototype.render = function(svg, x, y) {
   this.avatar = svg.line(x, y, x, y+Score.Staff.HEIGHT).stroke('#000');
-  return x;
 };
