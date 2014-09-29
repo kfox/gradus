@@ -46,9 +46,15 @@
     <script type="text/javascript" src="gradus.js"></script>
     <script type="text/javascript" src="rules/constraints.js"></script>
     <script type="text/javascript" src="rules/1st_species.js"></script>
+
+    <style>
+      .status.busy { background-color: #ffa500 }
+      .status.done { background-color: #00aa00 }
+    </style>
   </head>
   <body>
     <div id="controls">
+      <span style="display: inline-block; width: 30px" class="status">&nbsp;</span>
       <label>Hyper mode: </label>
       <label><input type="radio" name="hyper" value="on"/>On</label>
       <label><input type="radio" name="hyper" value="off" checked="checked"/>Off</label>
