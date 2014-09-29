@@ -1,6 +1,53 @@
 
 
-Gradus = {};
+Gradus = {
+  Hyper: {
+    On: function(score) {
+      if (Gradus.Hyper.Engaged)
+        return;
+      Gradus.Hyper.Engaged = true;
+
+      var counterpoint = score.parts[0];
+      var futures = Gradus.FirstSpecies.elaborate(score);
+
+      counterpoint.findAll('Rest').forEach(function(rest, irest) {
+        var pitches = {};
+        var bass = counterpoint.below(rest);
+        futures.forEach(function(future) {
+          pitches[future[irest]] = true;
+        });
+
+        var chord = new Score.Chord();
+        // TODO: measure.replace should call setMeasure()
+        // setMeasure on chord should call it on its notes
+        // and also find better way to set up part, score
+        chord.measure = rest.measure;
+        for (var pitch in pitches) {
+          var note = new Score.Note({ value: rest.opts.value, pitch: pitch });
+          note.part = rest.part;
+          note.score = rest.score;
+          chord.push(note);
+        }
+        rest.measure.replace(rest, chord);
+      });
+    },
+    Off: function(score) {
+      if (!Gradus.Hyper.Engaged)
+        return;
+      Gradus.Hyper.Engaged = false;
+
+      var counterpoint = score.parts[0];
+
+      counterpoint.findAll('Chord').forEach(function(chord) {
+        var rest = new Score.Rest({ value: chord.notes[0].opts.value });
+        rest.measure = chord.measure;
+        rest.score = chord.notes[0].score;
+        rest.part = chord.notes[0].part;
+        chord.measure.replace(chord, rest);
+      });
+    }
+  }
+};
 
 $(document).ready(function() {
   var source = $('#score').text();
@@ -73,6 +120,13 @@ $(document).ready(function() {
       });
     }
   });
+
+  $('#controls input[name=hyper]').change(function(e) {
+    if ($(this).val() == 'on')
+      Gradus.Hyper.On(score);
+    else
+      Gradus.Hyper.Off(score);
+  });
+
   score0 = score;
-//  console.log(Gradus.FirstSpecies.elaborate(score));
 });
