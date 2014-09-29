@@ -49,21 +49,22 @@ Score.Note.ordToPitch = function(ord) {
     return this.PITCHES[ord];
 
   var shift = '';
-  while (ord < 21) {
+  var normalizedOrd = ord;
+  while (normalizedOrd < 21) {
     shift += ",";
-    ord += 7;
+    normalizedOrd += 7;
   }
-  while (ord > 34) {
+  while (normalizedOrd > 34) {
     shift += "'";
-    ord -= 7;
+    normalizedOrd -= 7;
   }
   var bases = {
     21: 'C', 22: 'D', 23: 'E', 24: 'F', 25: 'G', 26: 'A', 27: 'B',
     28: 'c', 29: 'd', 30: 'e', 31: 'f', 32: 'g', 33: 'a', 34: 'b'
   };
 
-  this.PITCHES[ord] = bases[ord] + shift;
-  return bases[ord] + shift;
+  this.PITCHES[ord] = bases[normalizedOrd] + shift;
+  return bases[normalizedOrd] + shift;
 };
 
 Score.Note.prototype.glyphValue = function() {
