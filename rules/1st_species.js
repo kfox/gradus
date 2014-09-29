@@ -29,7 +29,7 @@ Gradus.FirstSpecies.rules = [
       throw new Violation('Must start with a perfect consonance', counterpoint);
 
     var last = notes.pop();
-    counterpoint = cf.above(first);
+    counterpoint = cf.above(last);
     if (counterpoint.type != 'Note')
       return;
     interval = last.interval(counterpoint);
@@ -139,8 +139,8 @@ function intervalSequence(bass, counterpoint) {
   for (var n1, n2, i=0; i < events.length; ++i) {
     n1 = events[i][0].findNext('Tickable');
     n2 = events[i][1].findNext('Tickable');
-    if (!n1 || !n2 || n1.type != 'Note' || n2.type != 'Note')
-      events.splice(i, 1);
+    if (!n1 || !n2 || (n1.type != 'Note') || (n2.type != 'Note'))
+      events.splice(i--, 1);
   }
 
   var intervals = [];
