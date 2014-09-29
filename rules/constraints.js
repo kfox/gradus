@@ -8,14 +8,9 @@ Gradus.Constraints.Violation = function(message) {
 
 Gradus.Constraints.prototype.check = function(score) {
   var violations = [];
-  for (var i=0; i < this.rules.length; ++i) {
-    try {
-      this.rules[i](score);
-    } catch(e) {
-      if (e.constructor != Gradus.Constraints.Violation)
-        throw e;
-      violations.push(e);
-    }
+  for (var error, i=0; i < this.rules.length; ++i) {
+    error = this.rules[i](score);
+    error && violations.push(error);
   }
 
   if (violations.some(function(v){ return v.message.match(/must/i) }))

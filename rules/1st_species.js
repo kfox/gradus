@@ -5,14 +5,16 @@ Gradus.FirstSpecies.rules = [
   // Must contain only consonances
   function(score) {
     var cf = score.part('Cantus Firmus');
-    cf.findAll('Note').forEach(function(note) {
+    var notes = cf.findAll('Note');
+    for (var note, i=0; i < notes.length; ++i) {
+      note = notes[i];
       var counterpoint = cf.above(note);
       if (counterpoint.type != 'Note')
-        return;
+        continue;
       var interval = note.interval(counterpoint);
       if (!interval.consonant)
-        throw new Violation('All intervals must be consonant', counterpoint);
-    });
+        return new Violation('All intervals must be consonant', counterpoint);
+    }
   },
 
   // Must start with and end with perfect consonance
@@ -26,7 +28,7 @@ Gradus.FirstSpecies.rules = [
       return;
     var interval = first.interval(counterpoint);
     if (!(interval.perfect && interval.consonant))
-      throw new Violation('Must start with a perfect consonance', counterpoint);
+      return new Violation('Must start with a perfect consonance', counterpoint);
 
     var last = notes.pop();
     counterpoint = cf.above(last);
@@ -34,7 +36,7 @@ Gradus.FirstSpecies.rules = [
       return;
     interval = last.interval(counterpoint);
     if (!(interval.perfect && interval.consonant))
-      throw new Violation('Must end with a perfect consonance', counterpoint);
+      return new Violation('Must end with a perfect consonance', counterpoint);
   },
 
   // Must not be unison anywhere else
@@ -45,15 +47,16 @@ Gradus.FirstSpecies.rules = [
     notes.shift();
     notes.pop();
 
-    notes.forEach(function(note) {
+    for (var note, i=0; i < notes.length; ++i) {
+      note = notes[i];
       var counterpoint = cf.above(note);
       if (counterpoint.type != 'Note')
-        return;
+        continue;
       var interval = note.interval(counterpoint);
       if (interval.semitones == 0)
-	throw new Violation("Must not be unison except on first and last notes",
+	return new Violation("Must not be unison except on first and last notes",
                             counterpoint);
-    });
+    }
   },
 
   // Must establish mode clearly at the start
@@ -72,7 +75,7 @@ Gradus.FirstSpecies.rules = [
     while (curr) {
       interval = prev.interval(curr);
       if (interval.tritone)
-        throw new Violation('Must not travel by tritone', curr);
+        return new Violation('Must not travel by tritone', curr);
       prev = curr;
       curr = curr.findNext('Note');
     }
@@ -90,7 +93,7 @@ Gradus.FirstSpecies.rules = [
     while (curr) {
       interval = prev.interval(curr);
       if (interval.semitones >= 9)
-        throw new Violation('Must not travel by more than a minor sixth', curr);
+        return new Violation('Must not travel by more than a minor sixth', curr);
       prev = curr;
       curr = curr.findNext('Note');
     }
@@ -105,7 +108,7 @@ Gradus.FirstSpecies.rules = [
       if (intervals[i].motion != 'parallel')
         continue;
       if (intervals[i].destination.perfect && intervals[i].destination.consonant)
-        throw new Violation('Parallel motion must not result in a perfect consonance',
+        return new Violation('Parallel motion must not result in a perfect consonance',
                             intervals[i].notes[1], intervals[i].destination.notes[1]);
     }
   },
@@ -132,7 +135,7 @@ Gradus.FirstSpecies.rules = [
     }
 
     if (16 < highOrd - lowOrd)
-      throw new Violation('Total range of voice must not exceed a tenth', low, high);
+      return new Violation('Total range of voice must not exceed a tenth', low, high);
   },
 
 
@@ -159,10 +162,10 @@ Gradus.FirstSpecies.rules = [
     var semitones = note.interval(above).normalizedSemitones;
     if (note.ord(true) < above.ord(true)) {
       if (semitones != 9 && semitones != 8) // alow minor 6th just for now
-        throw new Violation('Second to last note must create a major 6th', above);
+        return new Violation('Second to last note must create a major 6th', above);
     } else {
       if (note.interval(above).normalizedSemitones != 3)
-        throw new Violation('Second to last note must create a minor 3rd', above);
+        return new Violation('Second to last note must create a minor 3rd', above);
     }
   }
 ];
