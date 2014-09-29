@@ -99,41 +99,22 @@ Gradus.FirstSpecies.rules = [
 
   // Must not travel by tritone
   function(score) {
-    var counterpoint = score.parts[0];
-
-    var interval;
-    var prev = counterpoint.find('Note');
-    if (!prev)
-      return;
-    var curr = prev.findNext(['Note', 'Rest']);
-    while (curr) {
-      if (prev.type == 'Note' && curr.type == 'Note') {
-        interval = prev.interval(curr);
-        if (interval.tritone)
-          return new Violation('Must not travel by tritone', curr);
-      }
-      prev = curr;
-      curr = curr.findNext(['Note', 'Rest']);
+    var pairs = this.adjacentCounterpointNotes(score);
+    for (var interval, i=0; i < pairs.length; ++i) {
+      interval = pairs[i][0].interval(pairs[i][1]);
+      if (interval.tritone)
+        return new Violation('Must not travel by tritone', pairs[i][0], pairs[i][1]);
     }
   },
 
   // Must not travel by more than a minor sixth
   function(score) {
-    var counterpoint = score.parts[0];
-
-    var interval;
-    var prev = counterpoint.find('Note');
-    if (!prev)
-      return;
-    var curr = prev.findNext(['Note', 'Rest']);
-    while (curr) {
-      if (prev.type == 'Note' && curr.type == 'Note') {
-        interval = prev.interval(curr);
-        if (interval.semitones >= 9)
-          return new Violation('Must not travel by more than a minor sixth', curr);
-      }
-      prev = curr;
-      curr = curr.findNext(['Note', 'Rest']);
+    var pairs = this.adjacentCounterpointNotes(score);
+    for (var interval, i=0; i < pairs.length; ++i) {
+      interval = pairs[i][0].interval(pairs[i][1]);
+      if (interval.semitones >= 9)
+        return new Violation('Must not travel by more than a minor sixth',
+                             pairs[i][0], pairs[i][1]);
     }
   },
 

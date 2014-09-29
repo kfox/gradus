@@ -19,7 +19,7 @@ Gradus.Constraints.prototype.check = function(score) {
 
   var violations = [];
   for (var error, i=0; i < this.rules.length; ++i) {
-    if ((error = this.rules[i](score)))
+    if ((error = this.rules[i].call(this, score)))
       violations.push(error);
   }
 
@@ -90,4 +90,24 @@ Gradus.Constraints.prototype.notify = function(score, container) {
       container.find('ul').append($('<li/>').text(violation.message));
     });
   }
+};
+
+Gradus.Constraints.prototype.adjacentCounterpointNotes = function(score) {
+  var counterpoint = score.parts[0];
+
+  var prev = counterpoint.find('Note');
+  var curr = prev && prev.findNext(['Note', 'Rest']);
+
+  if (!prev)
+    return;
+
+  var pairs = [];
+  while (curr) {
+    if (prev.type == 'Note' && curr.type == 'Note')
+      pairs.push([prev, curr]);
+    prev = curr;
+    curr = curr.findNext(['Note', 'Rest']);
+  }
+
+  return pairs;
 };
