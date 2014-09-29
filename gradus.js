@@ -52,6 +52,7 @@ Gradus = {
             chord.push(note);
           }
           rest.measure.replace(rest, chord);
+          chord.avatar.opacity(0.4);
         });
       });
     },
