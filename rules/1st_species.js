@@ -146,7 +146,25 @@ Gradus.FirstSpecies.rules = [
   function() { },
 
   // Second to last note MUST be a major sixth (?)
-  function() { }
+  function(score) {
+    var cf = score.part('Cantus Firmus');
+    var counterpoint = score.parts[0];
+    var note, notes = cf.findAll('Note');
+    note = notes[notes.length-2];
+
+    var above = cf.above(note);
+    if (!above || above.type != 'Note')
+      return;
+
+    var semitones = note.interval(above).normalizedSemitones;
+    if (note.ord(true) < above.ord(true)) {
+      if (semitones != 9 && semitones != 8) // alow minor 6th just for now
+        throw new Violation('Second to last note must create a major 6th', above);
+    } else {
+      if (note.interval(above).normalizedSemitones != 3)
+        throw new Violation('Second to last note must create a minor 3rd', above);
+    }
+  }
 ];
 
 

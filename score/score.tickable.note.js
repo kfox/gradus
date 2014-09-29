@@ -181,6 +181,7 @@ Score.Note.prototype.interval = function(note) {
 
   while (semitones > 12)
     semitones -= 12;
+  interval.normalizedSemitones = semitones;
 
   switch(semitones) {
   case 0:
