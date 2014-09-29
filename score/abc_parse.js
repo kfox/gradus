@@ -121,13 +121,8 @@ ABCLineParser.prototype = {
     case 'g':
       accidental = this.consumeAccidentals();
       decorations = this.consumeDecorations();
-      this.source = this.source.substr(1);
-
-      shift = 0;
-      while (this.source[0] == "'" || this.source[0] == ',') {
-        shift += (this.source[0]=="'" ? 1 : -1)
-        this.source = this.source.substr(1);
-      }
+      token = this.source.match(/^[A-Ga-g]('|,)*/)[0];
+      this.source = this.source.substr(token.length);
 
       value = this.parseNoteValue();
 
@@ -145,7 +140,6 @@ ABCLineParser.prototype = {
       return {
         type: 'note',
         pitch: token,
-        octave_shift: shift,
         value: value,
         accidentals: accidental || '',
         decorations: decorations,
@@ -161,15 +155,6 @@ ABCLineParser.prototype = {
           src += this.accidentals;
 
           src += this.pitch;
-          while (this.octave_shift > 0) {
-            src += "'";
-            this.octave_shift--;
-          }
-          while (this.octave_shift < 0) {
-            src += ",";
-            this.octave_shift++;
-          }
-
           src += (this.value == '1' ? '' : this.value);
 
           if (this.swing)
