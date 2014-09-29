@@ -28,15 +28,15 @@ Gradus.Constraints.prototype.notify = function(score, container) {
   var result = this.check(score);
   var violations = this.violations;
   container.empty();
-  if (result[0]) {
-    violations.forEach(function(violation) {
-      violation.elements.forEach(function(note) {
-        note.avatar.fill('#000');
-      });
+
+  violations.forEach(function(violation) {
+    violation.elements.forEach(function(note) {
+      note.avatar.fill('#000');
     });
-    violations.splice(0);
-  } else {
-    violations.splice(0);
+  });
+  violations.splice(0);
+
+  if (!result[0]) {
     container.append('<ul/>');
     result[1].forEach(function(violation) {
       violation.elements.forEach(function(note) {
