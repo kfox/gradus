@@ -55,6 +55,18 @@ Score.MidiWriter.prototype.trackChunk = function(writer) {
   writer.call(this, {
     writeData: function(data) {
       eventData += data;
+    },
+    noteOn: function(delta, ord) {
+      this.writeData(toHex(delta)); // delta time
+      this.writeData('91'); // note on, channel 1
+      this.writeData(toHex(ord, 2)); // note number
+      this.writeData('7f'); // velocity (127)
+    },
+    noteOff: function(delta, ord) {
+      this.writeData(toHex(delta)); // note length
+      this.writeData('81'); // note off, channel 1
+      this.writeData(toHex(ord, 2)); // note number
+      this.writeData('7f'); // velocity
     }
   });
 
@@ -64,25 +76,27 @@ Score.MidiWriter.prototype.trackChunk = function(writer) {
 
 Score.MidiWriter.prototype.writeTrack = function(part) {
   this.trackChunk(function(track) {
-    var e = part.find(['Note', 'Rest']);
+    var e = part.find(['Note', 'Rest', 'Chord']);
     var delta = 0;
     while (e) {
-      if (e.type == 'Rest') {
-        delta += e.ticks();
-      } else {
-        track.writeData(toHex(delta)); // delta time
-        track.writeData('91'); // note on, channel 1
-        track.writeData(toHex(e.ord(true), 2)); // note number
-        track.writeData('7f'); // velocity (127)
-
-        track.writeData(toHex(e.ticks())); // note length
-        track.writeData('81'); // note off, channel 1
-        track.writeData(toHex(e.ord(true), 2)); // note number
-        track.writeData('7f'); // velocity
-
-        delta = 0;
+      if (!e.chord) {
+        if (e.type == 'Rest') {
+          delta += e.ticks();
+        } else if (e.type == 'Chord') {
+          e.notes.forEach(function(note, inote) {
+            track.noteOn(inote == 0 ? delta : 0, note.ord(true));
+          });
+          e.notes.forEach(function(note, inote) {
+            track.noteOff(inote == 0 ? e.ticks() : 0, note.ord(true));
+          });
+          delta = 0;
+        } else if (e.type == 'Note') {
+          track.noteOn(delta, e.ord(true));
+          track.noteOff(e.ticks(), e.ord(true));
+          delta = 0;
+        }
       }
-      e = e.findNext(['Note', 'Rest']);
+      e = e.findNext(['Note', 'Rest', 'Chord']);
     }
 
     // Silent 0-length note to finish the track
