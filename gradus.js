@@ -94,6 +94,11 @@ $(document).ready(function() {
       'staff_element.mousedown': function(e) {
         e.preventDefault();
 
+        if (this.hyperGradus || this.type == 'Note') {
+          dragStartY = e.screenY;
+          transposeOffset = 0;
+        }
+
         if (this.hyperGradus) {
           dragging = new Score.Note({ pitch: this.opts.pitch,
                                       value: this.opts.value });
@@ -105,14 +110,10 @@ $(document).ready(function() {
         }
 
         if (this.type == 'Note') {
-          dragStartY = e.screenY;
           dragPitch = this.ord();
           dragging = this;
         } else if (this.type != 'Rest')
           return;
-
-        dragStartY = e.screenY;
-        transposeOffset = 0;
 
         this.opts.type = 'note';
         this.opts.pitch = this.opts.pitch || 'A';
