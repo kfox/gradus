@@ -9,8 +9,8 @@ Gradus.Constraints.Violation = function(message) {
 Gradus.Constraints.prototype.check = function(score) {
   var violations = [];
   for (var error, i=0; i < this.rules.length; ++i) {
-    error = this.rules[i](score);
-    error && violations.push(error);
+    if ((error = this.rules[i](score)))
+      violations.push(error);
   }
 
   if (violations.length)
@@ -18,7 +18,7 @@ Gradus.Constraints.prototype.check = function(score) {
   return [true, violations];
 };
 
-Gradus.Constraints.prototype.elaborate = function(score) {
+Gradus.Constraints.prototype.elaborate = function(score, prev) {
   // If the score is already invalid, there are no possible
   // notes in the future
   if (!this.check(score)[0])
@@ -34,20 +34,13 @@ Gradus.Constraints.prototype.elaborate = function(score) {
     return [[]];
 
   // Possible notes which could go in place of the next rest
-  var possibilities = [];
   var bass = counterpoint.below(rest);
-  for (var i=-10; i <= 10; ++i)
-    possibilities.push(
-      new Score.Note({
-        pitch: Score.Note.ordToPitch(bass.ord()+i),
-        value: rest.opts.value
-      })
-    );
+  var possibilities = this.naiveSonorities(bass, rest, prev);
 
   var futures = [];
   for (var future, i=0; i < possibilities.length; ++i) {
     rest.measure.replace(rest, possibilities[i], false);
-    future = this.elaborate(score);
+    future = this.elaborate(score, possibilities[i]);
     possibilities[i].measure.replace(possibilities[i], rest, false);
 
     future.forEach(function(set) {

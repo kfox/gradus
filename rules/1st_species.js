@@ -1,6 +1,40 @@
 
 var Violation = Gradus.Constraints.Violation;
 Gradus.FirstSpecies = new Gradus.Constraints();
+
+// Return a first guess at which notes could go on top of
+// a cf, in place of a rest
+Gradus.FirstSpecies.naiveSonorities = function(bass, rest, prev) {
+  var notes = [];
+  var bassOrd = bass.ord();
+
+  var offsets = [-9, -7, -5, -4, -2, 0, 2, 4, 5, 7, 9];
+  for (var i=0; i < offsets.length; ++i) {
+    notes.push(
+      new Score.Note({
+        pitch: Score.Note.ordToPitch(bassOrd+offsets[i]),
+        value: rest.opts.value
+      })
+    );
+
+    // Short-cut, remove it if makes a tritone
+    if (bass.interval(notes[notes.length-1]).tritone)
+      notes.pop();
+
+  }
+
+  if (prev) {
+    // Short-cut the check for travel by tritone or >= major sixth
+    for (var interval, i=0; i < notes.length; ++i) {
+      interval = prev.interval(notes[i]).semitones;
+      if (interval == 6 || interval >= 9)
+        notes.splice(i--, 1);
+    }
+  }
+
+  return notes;
+};
+
 Gradus.FirstSpecies.rules = [
   // Must contain only consonances
   function(score) {
@@ -12,8 +46,10 @@ Gradus.FirstSpecies.rules = [
       if (counterpoint.type != 'Note')
         continue;
       var interval = note.interval(counterpoint);
-      if (!interval.consonant)
+      if (!interval.consonant) {
+        console.log(note.opts.pitch, counterpoint.opts.pitch);
         return new Violation('All intervals must be consonant', counterpoint);
+      }
     }
   },
 
@@ -188,14 +224,16 @@ function intervalSequence(bass, counterpoint) {
     n2 = events[i][1].findNext(['Note', 'Rest']);
     if (!n1 || !n2 || (n1.type != 'Note') || (n2.type != 'Note'))
       events.splice(i--, 1);
+    else
+      events[i] = [[events[i][0], n1], [events[i][1], n2]];
   }
 
   var intervals = [];
   for (var interval, n1, n2, m1, m2, i=0; i < events.length; ++i) {
-    below = events[i][0];
-    above = events[i][1];
-    n1 = below.findNext('Note');
-    n2 = above.findNext('Note');
+    below = events[i][0][0];
+    above = events[i][1][0];
+    n1 = events[i][0][1];
+    n2 = events[i][1][1];
     m1 = below.motion(n1);
     m2 = above.motion(n2);
     interval = below.interval(above);
