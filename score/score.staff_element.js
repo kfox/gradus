@@ -12,9 +12,6 @@ Score.StaffElement.prototype.tickOffset = function(ref) {
 
 Score.StaffElement.prototype.isA = function(type) {
   var types = (typeof type == 'string') ? [type] : type;
-  for (var i=0; i < types.length; ++i)
-    if (types[i] == 'Tickable')
-      types = types.concat('Note', 'Rest');
   return types.indexOf(this.type) != -1;
 };
 

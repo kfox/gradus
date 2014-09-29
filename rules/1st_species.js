@@ -173,7 +173,7 @@ Gradus.FirstSpecies.rules = [
 
 function intervalSequence(bass, counterpoint) {
   var above, below;
-  above = counterpoint.find('Tickable');
+  above = counterpoint.find(['Note', 'Rest']);
 
   var events = [];
   while (above) {
