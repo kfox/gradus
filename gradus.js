@@ -25,7 +25,7 @@ $(document).ready(function() {
         transposeOffset = 0;
 
         this.opts.type = 'note';
-        this.opts.pitch = 'A';
+        this.opts.pitch = this.opts.pitch || 'A';
         dragging = new Score.Note(this.opts);
         dragPitch = dragging.ord();
 
