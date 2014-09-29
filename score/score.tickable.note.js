@@ -5,12 +5,20 @@ Score.Note = function(opts) {
 Score.Note.prototype = new Score.Tickable();
 Score.Note.prototype.type = 'Note';
 
+// Populated on demand
+Score.Note.ORDINALS = {};
+Score.Note.CHROMATIC_ORDINALS = {};
+Score.Note.PITCHES = {};
+
 Score.Note.prototype.ord = function(chromatic) {
   return Score.Note.pitchToOrd(this.opts.pitch, chromatic);
 };
 
 Score.Note.pitchToOrd = function(pitch, chromatic) {
-  // if chromatic, Middle C = 60
+  var cache = chromatic ? this.ORDINALS : this.CHROMATIC_ORDINALS;
+  if (cache[pitch])
+    return cache[pitch];
+
   var mdata, shift = 0;
   var octshift = chromatic ? 12 : 7;
   var note = pitch.match(/([A-Ga-g][,']*)/)[1];
@@ -30,11 +38,16 @@ Score.Note.pitchToOrd = function(pitch, chromatic) {
       'C': 21, 'D': 22, 'E': 23, 'F': 24, 'G': 25, 'A': 26, 'B': 27,
       'c': 28, 'd': 29, 'e': 30, 'f': 31, 'g': 32, 'a': 33, 'b': 34
     };
+
+  cache[pitch] = bases[key] + shift;
   return bases[key] + shift;
 };
 
 Score.Note.ordToPitch = function(ord) {
-  // There's no chromatic version of this method
+  // Note: there's no chromatic version of this method
+  if (this.PITCHES[ord])
+    return this.PITCHES[ord];
+
   var shift = '';
   while (ord < 21) {
     shift += ",";
@@ -48,6 +61,8 @@ Score.Note.ordToPitch = function(ord) {
     21: 'C', 22: 'D', 23: 'E', 24: 'F', 25: 'G', 26: 'A', 27: 'B',
     28: 'c', 29: 'd', 30: 'e', 31: 'f', 32: 'g', 33: 'a', 34: 'b'
   };
+
+  this.PITCHES[ord] = bases[ord] + shift;
   return bases[ord] + shift;
 };
 

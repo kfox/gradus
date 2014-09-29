@@ -11,11 +11,15 @@ Score.Measure.prototype.push = function(x) {
   x.measure = this;
 };
 
-Score.Measure.prototype.replace = function(el, newel) {
-  for (var i=0; i < this.elements.length; ++i) {
-    if (this.elements[i].avatar) {
-      this.elements[i].avatar.remove();
-      this.elements[i].avatar = null;
+Score.Measure.prototype.replace = function(el, newel, rerender) {
+  rerender = (rerender === undefined) ? true : rerender;
+
+  if (rerender) {
+    for (var i=0; i < this.elements.length; ++i) {
+      if (this.elements[i].avatar) {
+        this.elements[i].avatar.remove();
+        this.elements[i].avatar = null;
+      }
     }
   }
 
@@ -29,10 +33,12 @@ Score.Measure.prototype.replace = function(el, newel) {
     newel.prev.next = newel;
   if (newel.next)
     newel.next.prev = newel;
-
   this.elements[index] = newel;
-  this.prerender(svg0, this.renderYOffset);
-  this.part.score.reformatLine(this.renderLineNumber, this.renderXOffset);
+
+  if (rerender) {
+    this.prerender(svg0, this.renderYOffset);
+    this.part.score.reformatLine(this.renderLineNumber, this.renderXOffset);
+  }
 };
 
 Score.Measure.prototype.renderBeams = function(svg) {

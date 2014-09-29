@@ -76,7 +76,7 @@ Score.prototype.parseABC = function(abc) {
   for (var i=0; i < lines.length; ++i) {
     lines[i] = $.trim(lines[i]);
     if (!lines[i].length)
-      lines.splice(i,1);
+      lines.splice(i--, 1);
   }
 
   this.key = Score.Key.parse('CMaj');

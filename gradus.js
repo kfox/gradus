@@ -73,4 +73,6 @@ $(document).ready(function() {
       });
     }
   });
+  score0 = score;
+//  console.log(Gradus.FirstSpecies.elaborate(score));
 });
