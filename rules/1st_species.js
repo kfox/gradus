@@ -105,13 +105,15 @@ Gradus.FirstSpecies.rules = [
     var prev = counterpoint.find('Note');
     if (!prev)
       return;
-    var curr = prev.findNext('Note');
+    var curr = prev.findNext(['Note', 'Rest']);
     while (curr) {
-      interval = prev.interval(curr);
-      if (interval.tritone)
-        return new Violation('Must not travel by tritone', curr);
+      if (prev.type == 'Note' && curr.type == 'Note') {
+        interval = prev.interval(curr);
+        if (interval.tritone)
+          return new Violation('Must not travel by tritone', curr);
+      }
       prev = curr;
-      curr = curr.findNext('Note');
+      curr = curr.findNext(['Note', 'Rest']);
     }
   },
 
@@ -123,13 +125,15 @@ Gradus.FirstSpecies.rules = [
     var prev = counterpoint.find('Note');
     if (!prev)
       return;
-    var curr = prev.findNext('Note');
+    var curr = prev.findNext(['Note', 'Rest']);
     while (curr) {
-      interval = prev.interval(curr);
-      if (interval.semitones >= 9)
-        return new Violation('Must not travel by more than a minor sixth', curr);
+      if (prev.type == 'Note' && curr.type == 'Note') {
+        interval = prev.interval(curr);
+        if (interval.semitones >= 9)
+          return new Violation('Must not travel by more than a minor sixth', curr);
+      }
       prev = curr;
-      curr = curr.findNext('Note');
+      curr = curr.findNext(['Note', 'Rest']);
     }
   },
 
