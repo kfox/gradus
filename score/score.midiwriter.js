@@ -82,7 +82,7 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
         */
         delta = e.ticks();
       }
-      e = e.findNext('Tickable');
+      e = e.findNext(['Note', 'Rest']);
     }
 
     // Silent 0-length note to finish the track

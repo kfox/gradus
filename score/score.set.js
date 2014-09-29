@@ -17,7 +17,7 @@ Score.Set.prototype.filter = function(type) {
 
 Score.Set.prototype.elementAtOffset = function(tickOffset) {
   var first = this.elements[0];
-  var tickables = this.filter('Tickable');
+  var tickables = this.filter(['Note', 'Rest']);
   for (var i=0; i < tickables.elements.length; ++i)
     if (tickables.elements[i].tickOffset(first) >= tickOffset)
       return tickables.elements[i];

@@ -177,12 +177,12 @@ function intervalSequence(bass, counterpoint) {
     below = above.measure.part.below(above);
     if (above.type == 'Note' && below.type == 'Note')
       events.push([below, above]);
-    above = above.findNext('Tickable');
+    above = above.findNext(['Note', 'Rest']);
   }
 
   for (var n1, n2, i=0; i < events.length; ++i) {
-    n1 = events[i][0].findNext('Tickable');
-    n2 = events[i][1].findNext('Tickable');
+    n1 = events[i][0].findNext(['Note', 'Rest']);
+    n2 = events[i][1].findNext(['Note', 'Rest']);
     if (!n1 || !n2 || (n1.type != 'Note') || (n2.type != 'Note'))
       events.splice(i--, 1);
   }

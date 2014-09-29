@@ -113,15 +113,15 @@ Score.Note.prototype.isBeamed = function() {
   if (this.opts.beam)
     return true;
 
-  var next = this.findPrev('Tickable');
+  var next = this.findPrev(['Note', 'Rest']);
   return next && next.opts.beam;
 };
 
 Score.Note.prototype.isBeamStart = function(strict) {
-  var next = this.findNext('Tickable', {neighbor: true});
+  var next = this.findNext(['Note', 'Rest'], {neighbor: true});
   var beamed = this.opts.beam && next && next.type == 'Note';
   if (strict) {
-    var prev = this.findPrev('Tickable', {neighbor: true});
+    var prev = this.findPrev(['Note', 'Rest'], {neighbor: true});
     return beamed && (!prev || !prev.opts.beam);
   }
   return beamed;
@@ -130,14 +130,14 @@ Score.Note.prototype.isBeamStart = function(strict) {
 Score.Note.prototype.beamNext = function() {
   if (!this.opts.beam)
     return null;
-  var next = this.findNext('Tickable', {neighbor: true});
+  var next = this.findNext(['Note', 'Rest'], {neighbor: true});
   return next && next.type == 'Note' && next;
 };
 
 Score.Note.prototype.beamEnd = function() {
   if (!this.opts.beam)
     return this;
-  var next = this.findNext('Tickable', {neighbor: true});
+  var next = this.findNext(['Note', 'Rest'], {neighbor: true});
   return next ? (next.type == 'Note' ? next.beamEnd() : this) : this;
 };
 

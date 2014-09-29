@@ -7,7 +7,7 @@ Score.Tickable.prototype = new Score.StaffElement();
 Score.Tickable.prototype.isTriplet = function() {
   var x = this.findPrev('TupletBegin', {neighbor: true});
   for (var i = 0; x && i < 3; ++i) {
-    x = x.findNext('Tickable', {neighbor: true});
+    x = x.findNext(['Note', 'Rest'], {neighbor: true});
     if (x == this)
       return true;
   }
@@ -17,7 +17,7 @@ Score.Tickable.prototype.isTriplet = function() {
 Score.Tickable.prototype.ticks = function() {
   var opts = this.opts;
   var ticks = this.part.unitNoteValue();
-  var prev = this.findPrev('Tickable');
+  var prev = this.findPrev(['Note', 'Rest']);
   var dswing = prev && prev.opts.swing;
   var uswing = opts.swing;
 

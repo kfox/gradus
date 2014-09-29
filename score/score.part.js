@@ -29,7 +29,7 @@ Score.Part.prototype.line = function(i) {
   var line = [];
   while (el && el.type != 'Break') {
     line.push(el.measure);
-    el = el.findNext('Bar', 'Break');
+    el = el.findNext(['Bar', 'Break']);
   }
 
   return line;
