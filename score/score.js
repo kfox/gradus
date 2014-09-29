@@ -3,6 +3,10 @@ function Score() {
   this.parts = [];
 };
 
+function trim(str) {
+  return str.replace(/^\s+/g, '').replace(/\s+$/, '');
+}
+
 Score.prototype.part = function(id) {
   for (var i=0; i < this.parts.length; ++i)
     if (this.parts[i].id == id)
@@ -72,9 +76,9 @@ Score.prototype.reformatLine = function(n, x) {
 
 Score.prototype.parseABC = function(abc) {
   var parser, elements, staff;
-  var line, lines = $.trim(abc).split(/\n+/);
+  var line, lines = trim(abc).split(/\n+/);
   for (var i=0; i < lines.length; ++i) {
-    lines[i] = $.trim(lines[i]);
+    lines[i] = trim(lines[i]);
     if (!lines[i].length)
       lines.splice(i--, 1);
   }
@@ -136,8 +140,8 @@ Score.prototype.parseABC = function(abc) {
       continue;
     }
     if ((elements = lines[i].match(/\[V:([^\]]+)\]/))) {
-      part = this.part($.trim(elements[1]));
-      lines[i] = $.trim(lines[i]).substr(elements[0].length);
+      part = this.part(trim(elements[1]));
+      lines[i] = trim(lines[i]).substr(elements[0].length);
     }
 
     if (!this.parts.length)
