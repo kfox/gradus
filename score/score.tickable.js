@@ -46,6 +46,19 @@ Score.Tickable.prototype.ticks = function() {
   return ticks;
 };
 
+
+// For Rest and Note
+Score.Tickable.prototype.toABC = function() {
+  var abc = '';
+  abc += this.opts.accidentals || '';
+  abc += this.type == 'Rest' ? 'z' : this.opts.pitch;
+  abc += (this.opts.value == '1' ? '' : this.opts.value);
+  abc += ' ';
+  if (this.opts.tie)
+    abc += '-';
+  return abc;
+};
+
 Score.Tickable.prototype.addText = function(text) {
   if (!this.avatar)
     return;

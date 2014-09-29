@@ -195,6 +195,36 @@ Score.prototype.parseABC = function(abc) {
   return this;
 };
 
+Score.prototype.toABC = function() {
+  var abc = '';
+
+  abc += "K: "+this.key.names[0]+"\n";
+
+  switch(this.unitNoteValue) {
+  case Score.CROCHET:
+    abc += "L: 1/4\n";
+    break;
+  case Score.QUAVER:
+    abc += "L: 1/8\n";
+    break;
+  case Score.SEMIQUAVER:
+    abc += "L: 1/16\n";
+    break;
+  }
+
+  abc += "M: "+this.meter.beatsPerMeasure+'/'+this.meter.beatValue+"\n";
+
+  var nstaves = this.countStaves();
+  for (var set, i=0; i < nstaves; ++i) {
+    set = this.getAllStaves(i);
+    for (var measures, j=0; j < set.length; ++j) {
+      abc += set[j][0].toABC(set[j][1]);
+    }
+  }
+
+  return abc;
+};
+
 Score.parseABC = function(abc) {
   return new Score().parseABC(abc);
 };

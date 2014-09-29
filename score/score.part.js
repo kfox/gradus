@@ -179,6 +179,15 @@ Score.Part.prototype.render = function(svg, yoffset) {
   return xoffset;
 };
 
+Score.Part.prototype.toABC = function(measures) {
+  var abc = "[V: "+this.id+"\t] ";
+  for (var i=0; i < measures.length; ++i) {
+    for (var j=0; j < measures[i].elements.length; ++j) {
+      abc += measures[i].elements[j].toABC();
+    }
+  }
+  return abc + "\n";
+};
 
 Score.Part.renderAll = function(svg, voices, yoffset) {
   var nvoices = voices.length;

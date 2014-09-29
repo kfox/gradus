@@ -61,6 +61,10 @@ Score.StaffElement.prototype.render = function(svg, x, y) {
   return x;
 };
 
+Score.StaffElement.prototype.toABC = function() {
+  return '';
+};
+
 Score.StaffElement.prototype.bindListeners = function() {
   var self = this, score = this.score;
   this.avatar.mousedown(function(e) {
