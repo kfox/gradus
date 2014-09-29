@@ -58,7 +58,7 @@ Gradus.Constraints.prototype.notify = function(score, container) {
 
   violations.forEach(function(violation) {
     violation.elements.forEach(function(note) {
-      note.avatar.fill('#000');
+      note.avatar && note.avatar.fill('#000');
     });
   });
   violations.splice(0);
