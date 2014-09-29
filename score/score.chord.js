@@ -8,6 +8,7 @@ Score.Chord.prototype.type = 'Chord';
 
 Score.Chord.prototype.push = function(note) {
   note.measure = this.measure;
+  note.chord = this;
   this.notes.push(note);
 };
 
@@ -19,4 +20,12 @@ Score.Chord.prototype.render = function(svg, x, y) {
   this.avatar = svg.group();
   for (var i=0; i < this.notes.length; ++i)
     this.notes[i].render(this.avatar, x, y);
+};
+
+Score.Chord.prototype.toABC = function() {
+  var abc = '[';
+  for (var i=0; i < this.notes.length; ++i)
+    abc += this.notes[i].toABC();
+  abc += ']';
+  return abc;
 };

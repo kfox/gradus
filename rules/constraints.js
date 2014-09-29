@@ -7,11 +7,28 @@ Gradus.Constraints.Violation = function(message) {
 };
 
 Gradus.Constraints.prototype.check = function(score) {
+  var counterpoint = score.parts[0];
+
+  var chords = [];
+  counterpoint.findAll('Chord').forEach(function(chord) {
+    var rest = new Score.Rest({ value: chord.notes[0].opts.value });
+    chord.measure.replace(chord, rest, false);
+    chords.push(chord);
+
+  });
+
   var violations = [];
   for (var error, i=0; i < this.rules.length; ++i) {
     if ((error = this.rules[i](score)))
       violations.push(error);
   }
+
+  if (chords.length)
+    counterpoint.findAll('Rest').forEach(function(rest, irest) {
+      var chord = chords[irest];
+      rest.measure.replace(rest, chord, false);
+    });
+
 
   if (violations.length)
     return [false, violations];

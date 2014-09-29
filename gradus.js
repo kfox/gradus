@@ -12,7 +12,10 @@ Gradus = {
         self.postSolution(message.data);
         $('#controls .status').removeClass('busy').addClass('done');
       };
+
+      Score.Chord.prototype.toABC = function(){ return 'z4' };
       this.worker.postMessage(score.toABC());
+
       $('#controls .status').removeClass('done').addClass('busy');
     },
 
@@ -38,20 +41,22 @@ Gradus = {
           return;
 
         var counterpoint = score.parts[0];
-        counterpoint.findAll('Rest').forEach(function(rest, irest) {
+        counterpoint.findAll(['Rest', 'Chord']).forEach(function(el, iel) {
           var chord = new Score.Chord();
+          var value = (el.type == 'Rest') ? el.opts.value : el.notes[0].opts.value;
           // TODO: measure.replace should call setMeasure()
           // setMeasure on chord should call it on its notes
           // and also find better way to set up part, score
-          chord.measure = rest.measure;
-          for (var i=0; i < chords[irest].length; ++i) {
-            var note = new Score.Note({ value: rest.opts.value,
-                                        pitch: chords[irest][i] });
-            note.part = rest.part;
-            note.score = rest.score;
+          chord.measure = el.measure;
+          for (var i=0; i < chords[iel].length; ++i) {
+            var note = new Score.Note({ value: value,
+                                        pitch: chords[iel][i] });
+            note.part = el.part;
+            note.score = el.score;
+            note.hyperGradus = true;
             chord.push(note);
           }
-          rest.measure.replace(rest, chord);
+          el.measure.replace(el, chord);
           chord.avatar.opacity(0.4);
         });
       });
@@ -88,6 +93,17 @@ $(document).ready(function() {
     events: {
       'staff_element.mousedown': function(e) {
         e.preventDefault();
+
+        if (this.hyperGradus) {
+          dragging = new Score.Note({ pitch: this.opts.pitch,
+                                      value: this.opts.value });
+          this.chord.measure.replace(this.chord, dragging);
+          dragPitch = dragging.ord();
+          Gradus.FirstSpecies.notify(score, $('#messages'));
+          Gradus.Hyper.solve(score);
+          return;
+        }
+
         if (this.type == 'Note') {
           dragStartY = e.screenY;
           dragPitch = this.ord();

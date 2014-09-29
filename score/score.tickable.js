@@ -53,7 +53,8 @@ Score.Tickable.prototype.toABC = function() {
   abc += this.opts.accidentals || '';
   abc += this.type == 'Rest' ? 'z' : this.opts.pitch;
   abc += (this.opts.value == '1' ? '' : this.opts.value);
-  abc += ' ';
+  if (!this.opts.beam)
+    abc += ' ';
   if (this.opts.tie)
     abc += '-';
   return abc;
