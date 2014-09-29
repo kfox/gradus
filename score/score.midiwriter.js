@@ -64,7 +64,7 @@ Score.MidiWriter.prototype.trackChunk = function(writer) {
 
 Score.MidiWriter.prototype.writeTrack = function(part) {
   this.trackChunk(function(track) {
-    var e = part.find('Tickable');
+    var e = part.find(['Note', 'Rest']);
     var delta = 0;
     while (e) {
       if (e.type == 'Rest') {
