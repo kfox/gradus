@@ -36,7 +36,6 @@ Gradus.Constraints.prototype.elaborate = function(score, prev) {
   // Possible notes which could go in place of the next rest
   var bass = counterpoint.below(rest);
   var possibilities = this.naiveSonorities(bass, rest, prev);
-
   var futures = [];
   for (var future, i=0; i < possibilities.length; ++i) {
     rest.measure.replace(rest, possibilities[i], false);

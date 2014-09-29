@@ -23,7 +23,6 @@ Score.Measure.prototype.replace = function(el, newel, rerender) {
     }
   }
 
-  var index = this.elements.indexOf(el);
   newel.measure = this;
   newel.part = el.part;
   newel.score = el.score;
@@ -33,7 +32,17 @@ Score.Measure.prototype.replace = function(el, newel, rerender) {
     newel.prev.next = newel;
   if (newel.next)
     newel.next.prev = newel;
-  this.elements[index] = newel;
+
+  var index = this.elements.indexOf(el);
+  if (index == -1) {
+    this.filter('Chord').elements.forEach(function(chord) {
+      index = chord.notes.indexOf(el);
+      if (index != -1)
+        chord.notes[index] = newel;
+    });
+  } else {
+    this.elements[index] = newel;
+  }
 
   if (rerender) {
     this.prerender(svg0, this.renderYOffset);

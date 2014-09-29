@@ -127,7 +127,7 @@ ABCLineParser.prototype = {
       value = this.parseNoteValue();
 
       beam = this.source.match(/^\S/);
-      beam = beam && !this.source.match(/^\)\s/);
+      beam = beam && !this.chord && !this.source.match(/^\)\s/);
       this.source = this.source.replace(/^\s+/, '');
 
       swing = this.source.match(/^[><]/);

@@ -5,8 +5,13 @@ Score.StaffElement.prototype.ticks = function(){ return 0 };
 
 Score.StaffElement.prototype.tickOffset = function(ref) {
   var ticks = 0;
-  for (var e = ref; e != this; e = e.next)
-    ticks += e.ticks();
+  var chord = [];
+  for (var e = ref; e != this; e = e.next) {
+    if (chord.indexOf(e) == -1)
+      ticks += e.ticks();
+    if (e.type == 'Chord')
+      chord = e.notes;
+  }
   return ticks;
 };
 

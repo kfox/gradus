@@ -53,11 +53,17 @@ Score.Part.prototype.findAll = function(type) {
 };
 
 Score.Part.prototype.add = function(element) {
-  var measure = this.measures[this.measures.length-1];
-  if (!measure || element.isBar())
-    measure = this.measures[this.measures.length] = new Score.Measure(this);
+  var parent;
+  if (this.chord) {
+    parent = this.chord
+  } else {
+    var measure = this.measures[this.measures.length-1];
+    if (!measure || element.isBar())
+      measure = this.measures[this.measures.length] = new Score.Measure(this);
+    parent = measure;
+  }
 
-  measure.push(element);
+  parent.push(element);
   element.part = this;
   element.score = this.score;
 
@@ -97,10 +103,12 @@ Score.Part.prototype.endGrace = function() {
   return this.add(new Score.GraceEnd());
 };
 Score.Part.prototype.beginChord = function() {
-  return this.add(new Score.ChordBegin());
+  var chord = this.add(new Score.Chord());
+  this.chord = chord;
+  return chord;
 };
 Score.Part.prototype.endChord = function() {
-  return this.add(new Score.ChordEnd());
+  this.chord = null;
 };
 
 Score.Part.prototype.renderClef = function(svg, yoffset) {
