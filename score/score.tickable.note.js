@@ -164,6 +164,9 @@ Score.Note.prototype.interval = function(note) {
     perfect: false, consonant: false
   };
 
+  while (semitones > 12)
+    semitones -= 12;
+
   switch(semitones) {
   case 0:
     interval.name ='P1';
