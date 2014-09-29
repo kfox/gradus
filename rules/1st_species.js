@@ -46,10 +46,8 @@ Gradus.FirstSpecies.rules = [
       if (counterpoint.type != 'Note')
         continue;
       var interval = note.interval(counterpoint);
-      if (!interval.consonant) {
-        console.log(note.opts.pitch, counterpoint.opts.pitch);
+      if (!interval.consonant)
         return new Violation('All intervals must be consonant', counterpoint);
-      }
     }
   },
 
