@@ -74,13 +74,13 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
         track.writeData('91'); // note on, channel 1
         track.writeData(toHex(e.ord(true), 2)); // note number
         track.writeData('7f'); // velocity (127)
-        /*
-          track.writeData(toHex(e.ticks())); // note length
-          track.writeData('81'); // note off, channel 1
-          track.writeData(toHex(e.ord(true), 2)); // note number
-          track.writeData('7f'); // velocity
-        */
-        delta = e.ticks();
+
+        track.writeData(toHex(e.ticks())); // note length
+        track.writeData('81'); // note off, channel 1
+        track.writeData(toHex(e.ord(true), 2)); // note number
+        track.writeData('7f'); // velocity
+
+        delta = 0;
       }
       e = e.findNext(['Note', 'Rest']);
     }
