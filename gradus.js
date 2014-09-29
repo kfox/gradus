@@ -34,6 +34,9 @@ Gradus = {
       Gradus.Hyper.Engaged = true;
 
       this.onSolutionReady(function(chords) {
+        if (chords[0].length == 0) // failed to find a solution
+          return;
+
         var counterpoint = score.parts[0];
         counterpoint.findAll('Rest').forEach(function(rest, irest) {
           var chord = new Score.Chord();
@@ -146,8 +149,14 @@ $(document).ready(function() {
     }
   });
 
-  $('#controls input[name=hyper]').change(function(e) {
-    if ($(this).val() == 'on')
+  key('tab', function(e) {
+    e.preventDefault();
+    var controls = $('#controls input[name=hyper]');
+    var state = controls.filter(':checked').val();
+    state = controls.filter('[value='+(state == 'on' ? 'off' : 'on')+']').
+      prop('checked', true).val();
+
+    if (state == 'on')
       Gradus.Hyper.On(score);
     else
       Gradus.Hyper.Off(score);
