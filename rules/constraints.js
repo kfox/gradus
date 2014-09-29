@@ -13,9 +13,8 @@ Gradus.Constraints.prototype.check = function(score) {
     error && violations.push(error);
   }
 
-  if (violations.some(function(v){ return v.message.match(/must/i) }))
+  if (violations.length)
     return [false, violations];
-
   return [true, violations];
 };
 
