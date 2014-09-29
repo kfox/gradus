@@ -78,7 +78,7 @@ Gradus.FirstSpecies.rules = [
     }
   },
 
-  // Must not travel by major sixth
+  // Must not travel by more than a minor sixth
   function(score) {
     var counterpoint = score.parts[0];
 
@@ -89,8 +89,8 @@ Gradus.FirstSpecies.rules = [
     var curr = prev.findNext('Note');
     while (curr) {
       interval = prev.interval(curr);
-      if (interval.semitones == 9)
-        throw new Violation('Must not travel by major sixth', curr);
+      if (interval.semitones >= 9)
+        throw new Violation('Must not travel by more than a minor sixth', curr);
       prev = curr;
       curr = curr.findNext('Note');
     }
@@ -109,6 +109,32 @@ Gradus.FirstSpecies.rules = [
                             intervals[i].notes[1], intervals[i].destination.notes[1]);
     }
   },
+
+  // Total range must not exceed a tenth
+  function(score) {
+    var counterpoint = score.parts[0];
+    var notes = counterpoint.findAll('Note');
+    if (!notes.length)
+      return;
+
+    var low, high, lowOrd, highOrd;
+    low = high = notes[0];
+    lowOrd = highOrd = notes[0].ord(true);
+    for (var ord, i=1; i < notes.length; ++i) {
+      ord = notes[i].ord(true);
+      if (ord < lowOrd) {
+        lowOrd = ord;
+        low = notes[i];
+      } else if (ord > highOrd) {
+        highOrd = ord;
+        high = notes[i];
+      }
+    }
+
+    if (16 < highOrd - lowOrd)
+      throw new Violation('Total range of voice must not exceed a tenth', low, high);
+  },
+
 
   // Should not battuta (contract from 10th to 8ve stepwise)
   function() { },
