@@ -37,7 +37,7 @@ Gradus = {
       Gradus.Hyper.Engaged = true;
 
       this.onSolutionReady(function(chords) {
-        if (chords[0].length == 0) // failed to find a solution
+        if (!chords.length || chords[0].length == 0) // failed to find a solution
           return;
 
         var counterpoint = score.parts[0];
