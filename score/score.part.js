@@ -214,7 +214,7 @@ Score.Part.renderAll = function(svg, voices, yoffset) {
   var set = [];
   for (var i=0; i < nvoices; ++i)
     set.push($.map(voices[i][1], function(x){ return x.elements }));
-  new Score.Formatter(set).format(xoffset);
+  new Score.Formatter(set, svg.width()-xoffset).format(xoffset);
 
   for (var i=0; i < nvoices; ++i)
     for (var j=0; j < voices[i][1].length; ++j)

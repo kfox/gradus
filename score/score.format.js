@@ -1,14 +1,17 @@
-Score.Formatter = function(voices) {
+Score.Formatter = function(voices, totalWidth) {
   this.voices = voices;
+  this.totalWidth = totalWidth;
 };
 
 Score.Formatter.prototype.getEvents = function() {
   var events = {};
+  var maxTick = 0;
   this.voices.forEach(function(voice) {
     voice.forEach(function(element) {
       var tick = element.tickOffset(voice[0]);
       if (element.isBar())
         return;
+      maxTick = Math.max(maxTick, tick+element.ticks());
       if (events[tick]) {
         events[tick].elements.push(element);
         events[tick].prestretch = Math.max(events[tick].prestretch,
@@ -67,6 +70,11 @@ Score.Formatter.prototype.getEvents = function() {
     list.push(e);
   }
 
+  var finalEvent = { elements: [], tick: maxTick };
+  finalEvent.prev = list[list.length-1];
+  list[list.length-1].next = finalEvent;
+  list.push(finalEvent);
+
   return list;
 };
 
@@ -106,6 +114,13 @@ Score.Formatter.prototype.getRods = function(events) {
       });
     });
   });
+
+  rods.push({
+    p1: events[0],
+    p2: events[events.length-1],
+    width: this.totalWidth-50
+  });
+
   /*
     events.forEach(function(event) {
     if (event.bar) {

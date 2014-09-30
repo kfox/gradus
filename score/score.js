@@ -35,7 +35,7 @@ Score.prototype.getAllStaves = function(line) {
 Score.prototype.render = function(container, options) {
   $(container).css('width', '1000px').empty();
 
-  var svg = SVG(container);
+  var svg = this.svg = SVG(container);
   var nstaves = this.countStaves();
   var nvoices = this.parts.length;
   var requiredHeight = Score.Staff.HEIGHT + Score.Staff.VERTICAL_PADDING;
@@ -71,7 +71,7 @@ Score.prototype.reformatLine = function(n, x) {
   var voices = this.getAllStaves(n);
   for (var i=0; i < voices.length; ++i)
     voices[i] = $.map(voices[i][1], function(x){ return x.elements });
-  new Score.Formatter(voices).format(x);
+  new Score.Formatter(voices, this.svg.width()-x).format(x);
 };
 
 Score.prototype.parseABC = function(abc) {
