@@ -251,6 +251,10 @@ Score.Note.prototype.render = function(svg, x, y, options) {
   ball.move(x+Score.Staff.LINE_HEIGHT/2, y,
             Score.Staff.LINE_HEIGHT/2);
 
+  // For receiving events inside the note head
+  var box = ball.head.bbox();
+  ball.rect(box.width, box.height).move(box.x, box.y).opacity(0.0);
+
   this.avatar = ball;
   this.bindListeners();
 };
