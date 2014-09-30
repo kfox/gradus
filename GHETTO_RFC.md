@@ -63,6 +63,21 @@ Note against note (lets use whole notes in examples)
 Two half notes against a whole note cantus firmus
 
 ```
-  Thesis (downbeat) MUST only contain consonances 
-  Arsis (upbeat) MAY be dissonant, only if a part of stepwise motion
+  Thesis (downbeat) MUST only contain consonances (pg. 41)
+  Arsis (upbeat) MAY be dissonant, only if a part of stepwise motion (diminution)(pg. 41)
+  Last measure MUST be 5th, then a 6th (or if cf is in upper voice, 5th then minor 3rd) (pg. 42, top) 
+    In some modes, the 5th might be tritone, so in that case it's a sixth
+  MUST NOT have two consecutive Theses be parallel 5ths/octaves UNLESS the arsis skips a fourth,fifth,or sixth (pg. 43)
+  
+  When cf is in upper voice...
+    MAY use a half rest in place of first note (pg. 45)
+    MAY skip a minor sixth or octave if cf and counter point are "close" and contrary motion not possible (pg. 45)
+  
+```
+
+## Third Species
+
+```
+
+
 ```
