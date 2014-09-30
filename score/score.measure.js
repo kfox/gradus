@@ -5,6 +5,7 @@ Score.Measure = function(voice) {
 };
 
 Score.Measure.prototype = new Score.Set();
+Score.Measure.prototype.type = 'Measure';
 
 Score.Measure.prototype.push = function(x) {
   this.elements.push(x);
@@ -75,4 +76,38 @@ Score.Measure.prototype.prerender = function(svg, yoffset) {
       below.addText(below.interval(e).name);
     }
   }
+};
+
+Score.Measure.prototype.render = function(svg) {
+  var x = this.elements[0].avatar.rbox().x;
+  var y = this.renderYOffset - Score.Staff.VERTICAL_PADDING/2;
+
+  var w, h, right = this.elements[this.elements.length-1];
+  if (right.next && right.next.avatar)
+    w = right.next.avatar.rbox().x - x;
+  else
+    w = right.avatar.rbox().x2 - x;
+  h = Score.Staff.HEIGHT + Score.Staff.VERTICAL_PADDING;
+
+  this.avatar = svg.rect(w, h).move(x, y).opacity(0.0);
+  this.avatar.back();
+  this.bindListeners();
+};
+
+Score.Measure.prototype.bindListeners = function() {
+  var self = this;
+  this.avatar.mousemove(function(e) {
+    self.trigger('mousemove', e);
+  });
+  this.avatar.mousedown(function(e) {
+    self.trigger('mousedown', e);
+  });
+};
+
+Score.Measure.prototype.trigger = function(id, event) {
+  var score = this.elements[0].score;
+  var scopedId = 'measure.'+id;
+  event.scoreTarget = event.scoreTarget || this;
+  if (score.eventListeners[scopedId])
+    score.eventListeners[scopedId].call(this, event);
 };

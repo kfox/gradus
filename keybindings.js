@@ -47,48 +47,55 @@ $(document).ready(function() {
 
 
 (function() {
-  var dragStartY, dragPitch;
+  var pitchFromEvent = function(part, measure, e) {
+    var off = Math.floor(2*(e.offsetY-measure.renderYOffset)/Score.Staff.LINE_HEIGHT);
+    return part.offsetToPitch(off);
+  };
 
   // Insert a note when the staff is clicked, and begin dragging
-  Gradus.keyBindings['staff_element.mousedown'] = function(e) {
-    var selected;
-    if (!this.hyperGradus && this.type != 'Note' && this.type != 'Rest')
+  Gradus.keyBindings['measure.mousedown'] = function(e) {
+    var selected, target = e.scoreTarget;
+    if (target.type == 'Measure') {
+      target = target.filter('Rest').elements[0];
+      if (!target)
+        return;
+    }
+
+    if (!target.hyperGradus && target.type != 'Note' && target.type != 'Rest')
       return;
 
-    dragStartY = e.screenY;
-    transposeOffset = 0;
     Gradus.startDragging();
 
-    if (this.hyperGradus) {
-      selected = new Score.Note({ pitch: this.opts.pitch,
-                                  value: this.opts.value });
-      Gradus.replace(this.chord, selected);
+    if (target.hyperGradus) {
+      selected = new Score.Note({ pitch: target.opts.pitch,
+                                  value: target.opts.value });
+      Gradus.replace(target.chord, selected);
     } else {
-      this.opts.type = 'note';
-      this.opts.pitch = this.opts.pitch || 'A';
-      selected = new Score.Note(this.opts);
-      Gradus.replace(this, selected);
+      target.opts.type = 'note';
+      target.opts.pitch = target.opts.pitch || pitchFromEvent(this.part, this, e);
+      selected = new Score.Note(target.opts);
+      Gradus.replace(target, selected);
     }
 
     Gradus.setSelected(selected);
-    dragPitch = selected.ord();
     e.preventDefault();
   };
 
   // Move selected note up/down the staff while dragging
-  Gradus.keyBindings['score.mousemove'] = function(e) {
+  Gradus.keyBindings['measure.mousemove'] = function(e) {
     if (!Gradus.isDragging())
-      return;
-
-    e.preventDefault();
+      return false;
 
     var selected = Gradus.getSelected();
-    var x = Math.floor((e.screenY-dragStartY)/Score.Staff.LINE_HEIGHT);
-    var newPitch = Score.Note.ordToPitch(dragPitch - x);
-    if (newPitch != selected.opts.pitch) {
-      selected.opts.pitch = newPitch;
-      Gradus.replace(selected, selected);
-    }
+    if (selected.measure != this)
+      return;
+
+    var pitch = pitchFromEvent(this.part, this, e);
+    if (selected.opts.pitch == pitch)
+      return;
+
+    selected.opts.pitch = pitch;
+    Gradus.replace(selected, selected);
   };
 
   // Stop dragging when click is released

@@ -65,9 +65,18 @@ Score.StaffElement.prototype.toABC = function() {
 };
 
 Score.StaffElement.prototype.bindListeners = function() {
-  var self = this, score = this.score;
+  var self = this;
   this.avatar.mousedown(function(e) {
-    if (score.eventListeners['staff_element.mousedown'])
-      score.eventListeners['staff_element.mousedown'].call(self, e);
+    self.trigger('mousedown', e);
   });
+};
+
+Score.StaffElement.prototype.trigger = function(id, event) {
+  var score = this.score;
+  var scopedId = 'staff_element.'+id;
+  event.scoreTarget = event.scoreTarget || this;
+  if (score.eventListeners[scopedId])
+    score.eventListeners[scopedId].call(this, event);
+  if (this.measure)
+    this.measure.trigger(id, event);
 };

@@ -1,3 +1,6 @@
+// Bugs:
+//   * breaks when last element on line is a bar
+
 Score.Formatter = function(voices, totalWidth) {
   this.voices = voices;
   this.totalWidth = totalWidth;

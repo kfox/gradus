@@ -68,10 +68,19 @@ Score.prototype.render = function(container, options) {
 };
 
 Score.prototype.reformatLine = function(n, x) {
-  var voices = this.getAllStaves(n);
+  var voices = this.getAllStaves(n), set = [];
   for (var i=0; i < voices.length; ++i)
-    voices[i] = $.map(voices[i][1], function(x){ return x.elements });
-  new Score.Formatter(voices, this.svg.width()-x).format(x);
+    set.push($.map(voices[i][1], function(x){ return x.elements }));
+
+  new Score.Formatter(set, this.svg.width()-x).format(x);
+
+  for (var i=0; i < voices.length; ++i) {
+    for (var j=0; j < voices[i][1].length; ++j) {
+      voices[i][1][j].avatar.remove();
+      voices[i][1][j].render(svg0);
+    }
+  }
+
 };
 
 Score.prototype.parseABC = function(abc) {
