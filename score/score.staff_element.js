@@ -69,6 +69,9 @@ Score.StaffElement.prototype.bindListeners = function() {
   this.avatar.mousedown(function(e) {
     self.trigger('mousedown', e);
   });
+  this.avatar.mousemove(function(e) {
+    self.trigger('mousemove', e);
+  });
 };
 
 Score.StaffElement.prototype.trigger = function(id, event) {
