@@ -5,16 +5,28 @@ Glyph = {
       var note = glyph.group();
       glyph.note = note;
 
+      var intersect_p = function(a, b) {
+        return (Math.abs(a.x - b.x) * 2 < (a.width + b.width)) &&
+          (Math.abs(a.y - b.y) * 2 < (a.height + b.height));
+      };
+
       var dx = 0;
       if (opts.sharp || opts.flat || opts.natural) {
         if (opts.sharp)
-          glyph.path(Glyph.glyphs['accidentals.sharp'].d);
+          glyph.accidental = glyph.path(Glyph.glyphs['accidentals.sharp'].d);
         else if (opts.flat)
-          glyph.path(Glyph.glyphs['accidentals.flat'].d);
+          glyph.accidental = glyph.path(Glyph.glyphs['accidentals.flat'].d);
         else if (opts.natural)
-          glyph.path(Glyph.glyphs['accidentals.natural'].d);
-        note.x(10);
-        dx = -10;
+          glyph.accidental = glyph.path(Glyph.glyphs['accidentals.natural'].d);
+
+        var box = glyph.accidental.bbox();
+        box = {x: -10, y: box.y, width: box.width, height: box.height};
+        var accidentals = opts.accidentals || [];
+        while (accidentals.some(function(abox) { return intersect_p(abox, box) }))
+          box.x -= 10;
+        accidentals.push(box);
+        note.x(-box.x);
+        dx = box.x;
       }
 
       var head, flags = null;
@@ -33,20 +45,26 @@ Glyph = {
       }
 
       glyph.head = note.path(head.d);
+      if (opts.right)
+        glyph.head.dx(head.w);
 
       if (opts.ledger !== undefined) {
+        glyph.ledger = note.group();
         if (opts.ledger == 0)
-          note.line(-3, 0, head.w+3, 0).stroke('#000');
+          glyph.ledger.line(-3, 0, head.w+3, 0).stroke('#000');
         else if (opts.ledger == -1)
-          note.line(-3, head.h/2, head.w+3, head.h/2).stroke('#000');
+          glyph.ledger.line(-3, head.h/2, head.w+3, head.h/2).stroke('#000');
         else if (opts.ledger == 1)
-          note.line(-3, -head.h/2, head.w+3, -head.h/2).stroke('#000');
+          glyph.ledger.line(-3, -head.h/2, head.w+3, -head.h/2).stroke('#000');
+        if (opts.right)
+          glyph.ledger.dx(head.w);
       }
 
       glyph.stem = note.path([
         ['M', head.w-0.5, -0.5],
         ['l', 0, -Score.Staff.LINE_HEIGHT * 3.5]
       ]).stroke('#000');
+
       if (type == 'whole')
         glyph.stem.opacity(0.0);
 

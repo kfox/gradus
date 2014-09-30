@@ -233,14 +233,18 @@ Score.Note.prototype.interval = function(note) {
   return interval;
 };
 
-Score.Note.prototype.render = function(svg, x, y) {
+Score.Note.prototype.render = function(svg, x, y, options) {
   var position = this.part.place(this);
   y = y + position * Score.Staff.LINE_HEIGHT / 2;
+
+  options = options || {};
 
   var ball = Glyph.Note.render(svg, this.glyphValue(), {
     sharp: this.isSharp(),
     noflags: this.isBeamed(),
     ledger: (position < 0 || position > 8) ? (position % 2) : undefined,
+    right: options.right,
+    accidentals: options.accidentals,
     dot: this.isDotted()
   });
 

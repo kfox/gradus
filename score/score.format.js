@@ -99,11 +99,10 @@ Score.Formatter.prototype.getRods = function(events) {
       if (!glyph)
         return;
 
-      w = glyph.note ? (glyph.note.rbox().x-glyph.rbox().x) : 0;
       rods.push({
         p1: event,
         p2: nextEvent,
-        width: w ? 12 + w : 15
+        width: glyph.rbox().width + 15
       });
     });
   });
@@ -191,11 +190,11 @@ Score.Formatter.prototype.debug = function(events, rods, x) {
       move(x+rod.p1.offset, y + 40 + 5 * (i % 5)).
       fill(color);
   }
+
   for (var i=0; i < events.length; ++i) {
     var color = '#999';
     if (events[i].bar)
       color = '#f00';
-    //        svg0.text(''+events[i].tick).move(x+events[i].offset, y+(i%3)*25+5);
     svg0.line(x+events[i].offset, y,
               x+events[i].offset, y+100).
       stroke(color);
