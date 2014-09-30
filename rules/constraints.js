@@ -13,6 +13,7 @@ Gradus.Constraints.prototype.check = function(score) {
   counterpoint.findAll('Chord').forEach(function(chord) {
     var rest = new Score.Rest({ value: chord.notes[0].opts.value });
     chord.measure.replace(chord, rest, false);
+    chord._rest = rest;
     chords.push(chord);
 
   });
@@ -24,11 +25,9 @@ Gradus.Constraints.prototype.check = function(score) {
   }
 
   if (chords.length)
-    counterpoint.findAll('Rest').forEach(function(rest, irest) {
-      var chord = chords[irest];
-      rest.measure.replace(rest, chord, false);
+    chords.forEach(function(chord) {
+      chord.measure.replace(chord._rest, chord, false);
     });
-
 
   if (violations.length)
     return [false, violations];
