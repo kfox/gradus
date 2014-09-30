@@ -102,7 +102,9 @@ Gradus = {
     e1.measure.replace(e1, e2);
     Gradus.FirstSpecies.notify(score, $('#messages'));
     Gradus.Hyper.solve();
-  }
+  },
+
+  keyBindings: {}
 };
 
 $(document).ready(function() {
@@ -110,54 +112,9 @@ $(document).ready(function() {
   var score = Gradus.score = Score.parseABC(source);
   Gradus.Hyper.solve(score);
 
-  var dragStartY;
-  var dragPitch;
   score.render($('#score')[0], {
     showIntervals: true,
-    events: {
-      'staff_element.mousedown': function(e) {
-        var selected;
-        if (!this.hyperGradus && this.type != 'Note' && this.type != 'Rest')
-          return;
-
-        dragStartY = e.screenY;
-        transposeOffset = 0;
-        Gradus.startDragging();
-
-        if (this.hyperGradus) {
-          selected = new Score.Note({ pitch: this.opts.pitch,
-                                      value: this.opts.value });
-          Gradus.replace(this.chord, selected);
-        } else {
-          this.opts.type = 'note';
-          this.opts.pitch = this.opts.pitch || 'A';
-          selected = new Score.Note(this.opts);
-          Gradus.replace(this, selected);
-        }
-
-        Gradus.setSelected(selected);
-        dragPitch = selected.ord();
-        e.preventDefault();
-      },
-      'score.mouseup': function(e) {
-        Gradus.stopDragging();
-        e.preventDefault();
-      },
-      'score.mousemove': function(e) {
-        if (!Gradus.isDragging())
-          return;
-
-        e.preventDefault();
-
-        var selected = Gradus.getSelected();
-        var x = Math.floor((e.screenY-dragStartY)/Score.Staff.LINE_HEIGHT);
-        var newPitch = Score.Note.ordToPitch(dragPitch - x);
-        if (newPitch != selected.opts.pitch) {
-          selected.opts.pitch = newPitch;
-          Gradus.replace(selected, selected);
-        }
-      }
-    }
+    events: Gradus.keyBindings
   });
 
   score0 = score;
