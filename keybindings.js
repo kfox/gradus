@@ -38,9 +38,12 @@ $(document).ready(function() {
     if (MIDI.Player.playing)
       return MIDI.Player.stop();
 
-    var data = new Score.MidiWriter(Gradus.score).writeMidi();
-    MIDI.Player.loadFile(data);
+    var midi = new Score.MidiWriter(Gradus.score).writeMidi();
+    MIDI.Player.loadFile(midi.file);
     MIDI.Player.start();
+
+    Gradus.animator = new Score.MidiAnimator(midi.events);
+    Gradus.animator.animate(MIDI.Player);
   });
 });
 

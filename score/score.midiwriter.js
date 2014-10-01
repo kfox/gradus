@@ -48,6 +48,12 @@ Score.MidiWriter.prototype.writeHeader = function() {
   this.writeData('7800'); // Score.CROCHET ticks per quarter note
 };
 
+Score.MidiWriter.prototype.ticksToMs = function(t) {
+  var tempo = 120; // default. 120 crochets / sec
+  var tPerBeat = Score.CROCHET; // ticks per beat, see writeHeader
+  return 1000 * (t / tPerBeat) * (60 / tempo);
+};
+
 Score.MidiWriter.prototype.trackChunk = function(writer) {
   this.writeData('4D54726B'); // "MTrk"
 
@@ -75,16 +81,30 @@ Score.MidiWriter.prototype.trackChunk = function(writer) {
 };
 
 Score.MidiWriter.prototype.writeTrack = function(part) {
+  var events = {};
+  var midi = this;
+  var event = function(t, e, d) {
+    t = midi.ticksToMs(t);
+    d = midi.ticksToMs(d);
+    events[t] = events[t] || {t: t, on: [], off: []};
+    events[t+d] = events[t+d] || {t: t+d, on: [], off: []};
+    events[t].on.push(e);
+    events[t+d].off.push(e);
+  };
+
   this.trackChunk(function(track) {
     var e = part.find(['Note', 'Rest', 'Chord']);
+    var t = 0;
     var delta = 0;
     while (e) {
       if (!e.chord) {
         if (e.type == 'Rest') {
           delta += e.ticks();
+          event(t, e, e.ticks());
         } else if (e.type == 'Chord') {
           e.notes.forEach(function(note, inote) {
             track.noteOn(inote == 0 ? delta : 0, note.ord(true));
+            event(t, note, note.ticks());
           });
           e.notes.forEach(function(note, inote) {
             track.noteOff(inote == 0 ? e.ticks() : 0, note.ord(true));
@@ -93,8 +113,10 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
         } else if (e.type == 'Note') {
           track.noteOn(delta, e.ord(true));
           track.noteOff(e.ticks(), e.ord(true));
+          event(t, e, e.ticks());
           delta = 0;
         }
+        t += e.ticks();
       }
       e = e.findNext(['Note', 'Rest', 'Chord']);
     }
@@ -107,13 +129,30 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
 
     track.writeData('00ff2f00'); // end of track
   });
+
+  return events;
 };
 
 Score.MidiWriter.prototype.writeMidi = function() {
   this.writeHeader();
 
-  for (var i=0; i < this.model.parts.length; ++i)
-    this.writeTrack(this.model.parts[i]);
+  var allEvents = {};
+  for (var e, i=0; i < this.model.parts.length; ++i) {
+    e = this.writeTrack(this.model.parts[i]);
+    for (var t in e) {
+      if (allEvents[t]) {
+        allEvents[t].on = allEvents[t].on.concat(e[t].on);
+        allEvents[t].off = allEvents[t].off.concat(e[t].off);
+      } else {
+        allEvents[t] = e[t];
+      }
+    }
+  }
+
+  var events = [];
+  for (var e in allEvents)
+    events.push(allEvents[e]);
+  events.sort(function(x,y) { return x.t - y.t });
 
   var encoded = '';
   for (var i=0; i < this.data.length; i += 2)
@@ -131,5 +170,6 @@ Score.MidiWriter.prototype.writeMidi = function() {
     }
   }
 
-  return 'data:audio/midi;base64,'+btoa(binary);
+
+  return {file: 'data:audio/midi;base64,'+btoa(binary), events: events};
 };
