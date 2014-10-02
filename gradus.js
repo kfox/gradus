@@ -104,18 +104,19 @@ Gradus = {
     Gradus.Hyper.solve();
   },
 
+  load: function(source) {
+    this.score = Score.parseABC(source);
+    this.score.render($('#score')[0], {
+      showIntervals: true,
+      events: this.keyBindings
+    });
+    Gradus.Hyper.solve();
+  },
+
   keyBindings: {}
 };
 
 $(document).ready(function() {
-  var source = $('#score').text();
-  var score = Gradus.score = Score.parseABC(source);
-  Gradus.Hyper.solve(score);
-
-  score.render($('#score')[0], {
-    showIntervals: true,
-    events: Gradus.keyBindings
-  });
-
-  score0 = score;
+  var source = $('#library >*').text();
+  Gradus.load(source);
 });
