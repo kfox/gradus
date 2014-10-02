@@ -64,10 +64,14 @@ Score.Tickable.prototype.addText = function(text) {
   if (!this.avatar)
     return;
 
-  if (this.avatar._text)
-    this.avatar._text.remove();
+  this.removeText();
 
   var y = -this.part.place(this) * Score.Staff.LINE_HEIGHT/2 - 20;
   this.avatar._text = this.avatar.plain(text);
   this.avatar._text.y(y);
+};
+
+Score.Tickable.prototype.removeText = function() {
+  this.avatar._text && this.avatar._text.remove();
+  this.avatar._text = undefined;
 };

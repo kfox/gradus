@@ -21,6 +21,9 @@ $(document).ready(function() {
     if (!selected)
       return;
 
+    var below = selected.part.below(selected);
+    below && below.removeText();
+
     var rest = new Score.Rest({ value: selected.opts.value });
     Gradus.replace(selected, rest);
 
