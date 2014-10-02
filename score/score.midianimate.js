@@ -7,7 +7,7 @@ Score.MidiAnimator = function(events) {
 Score.MidiAnimator.prototype.fill = function(el) {
   if (el.avatar) {
     el.avatar._preMidiFill = el.avatar.attr().fill;
-    el.avatar.attr('fill', '#00f');
+    el.avatar.attr('fill', '#00CC00');
     this.filled.push(el);
   }
 };
