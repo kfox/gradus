@@ -54,16 +54,18 @@ Score.Formatter.prototype.getEvents = function() {
           tick: tick,
           bar: true,
           elements: []
-        };
+        }
         barEvents[tick].prestretch = prev.prestretch = 15;
 
+        var e = events[tick] || eventList[eventList.length-1];
         barEvents[tick].prev = prev;
-        barEvents[tick].next = events[tick];
-        prev.prev = events[tick].prev;
+        barEvents[tick].next = e;
+        prev.prev = e.prev;
         prev.next = barEvents[tick];
 
-        events[tick].prev = barEvents[tick];
-        prev.prev.next = prev;
+        e.prev = barEvents[tick];
+        if (prev.prev)
+          prev.prev.next = prev;
       }
     });
   });
