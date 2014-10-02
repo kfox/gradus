@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+parts = [
+  "lib/score/score.js",
+  "lib/score/score.staff_element.js",
+  "lib/score/score.tickable.js",
+  "lib/score/score.set.js",
+
+  "lib/score/score.glyph.js",
+  "lib/score/score.break.js",
+  "lib/score/score.format.js",
+  "lib/score/score.glyphs.js",
+  "lib/score/score.key.js",
+  "lib/score/score.tempo.js",
+  "lib/score/score.measure.js",
+  "lib/score/score.meter.js",
+  "lib/score/score.part.js",
+  "lib/score/score.staff.js",
+  "lib/score/score.bar.js",
+  "lib/score/score.chord.js",
+  "lib/score/score.grace.js",
+  "lib/score/score.slur.js",
+  "lib/score/score.tuplet.js",
+  "lib/score/score.note.js",
+  "lib/score/score.rest.js",
+  "lib/score/score.chord.js",
+  "lib/score/score.midiwriter.js",
+  "lib/score/score.abc.js",
+
+  "public/rules/constraints.js",
+  "public/rules/1st_species.js",
+
+  "lib/solver/solve.1st.js"
+]
+
+root = File.expand_path("#{File.dirname(__FILE__)}/..")
+output = "#{root}/lib/score/score.solver.js"
+File.open(output, 'w') do |f|
+  f.puts("#!/usr/bin/env node")
+  f.puts("Gradus = {};")
+  parts.each{ |p| f.puts(File.read("#{root}/#{p}")) }
+end
+
+system('chmod', '+x', output)
+system(output, ARGV[0])
