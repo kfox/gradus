@@ -11,7 +11,8 @@ Score.Note.CHROMATIC_ORDINALS = {};
 Score.Note.PITCHES = {};
 
 Score.Note.prototype.ord = function(chromatic) {
-  return Score.Note.pitchToOrd(this.opts.pitch, chromatic);
+  var pitch = this.opts.accidentals + this.opts.pitch;
+  return Score.Note.pitchToOrd(pitch, chromatic);
 };
 
 Score.Note.pitchToOrd = function(pitch, chromatic) {
@@ -26,6 +27,12 @@ Score.Note.pitchToOrd = function(pitch, chromatic) {
     note = note.replace(/[,']/, '');
     shift += (mdata[0] == ',') ? -octshift : octshift;
   }
+
+  if (chromatic && pitch.indexOf('^') != -1)
+    shift += 1;
+  else if (chromatic && pitch.indexOf('_') != -1)
+    shift -= 1;
+
   var key = note.match(/[A-Ga-g]/);
   var bases;
   if (chromatic)
