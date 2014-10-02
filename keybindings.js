@@ -45,6 +45,14 @@ $(document).ready(function() {
     Gradus.animator = new Score.MidiAnimator(midi.events);
     Gradus.animator.animate(MIDI.Player);
   });
+
+  $('#controls input[name=bpm]').change(function(e) {
+    var val = $(this).val();
+    if (val.match(/^\d+$/) && parseInt(val) > 0) {
+      Gradus.score.setTempo('1/4='+val);
+      localStorage.setItem('tempo', val);
+    }
+  }).val(localStorage.getItem('tempo') || '120').trigger('change');
 });
 
 

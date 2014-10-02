@@ -12,6 +12,7 @@ importScripts(
   "../score/score.format.js",
   "../score/score.glyphs.js",
   "../score/score.key.js",
+  "../score/score.tempo.js",
   "../score/score.measure.js",
   "../score/score.meter.js",
   "../score/score.part.js",

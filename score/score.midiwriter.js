@@ -48,9 +48,9 @@ Score.MidiWriter.prototype.writeHeader = function() {
   this.writeData('7800'); // Score.CROCHET ticks per quarter note
 };
 
-Score.MidiWriter.prototype.ticksToMs = function(t) {
-  var tempo = 120; // default. 120 crochets / sec
+Score.MidiWriter.prototype.ticksToMs = function(t, tempo) {
   var tPerBeat = Score.CROCHET; // ticks per beat, see writeHeader
+  tempo = tempo || 120; // default. 120 crochets / sec
   return 1000 * (t / tPerBeat) * (60 / tempo);
 };
 
@@ -61,6 +61,10 @@ Score.MidiWriter.prototype.trackChunk = function(writer) {
   writer.call(this, {
     writeData: function(data) {
       eventData += data;
+    },
+    tempo: function(bpm) {
+      var usPerBeat = Math.round(60000000 / bpm);
+      this.writeData('00ff5103'+toHex(usPerBeat, 6));
     },
     noteOn: function(delta, ord) {
       this.writeData(toHex(delta)); // delta time
@@ -83,9 +87,10 @@ Score.MidiWriter.prototype.trackChunk = function(writer) {
 Score.MidiWriter.prototype.writeTrack = function(part) {
   var events = {};
   var midi = this;
+  var bpm = part.score.tempo.bpm('1/4');
   var event = function(t, e, d) {
-    t = midi.ticksToMs(t);
-    d = midi.ticksToMs(d);
+    t = midi.ticksToMs(t, bpm);
+    d = midi.ticksToMs(d, bpm);
     events[t] = events[t] || {t: t, on: [], off: []};
     events[t+d] = events[t+d] || {t: t+d, on: [], off: []};
     events[t].on.push(e);
@@ -96,6 +101,7 @@ Score.MidiWriter.prototype.writeTrack = function(part) {
     var e = part.find(['Note', 'Rest', 'Chord']);
     var t = 0;
     var delta = 0;
+    track.tempo(bpm);
     while (e) {
       if (!e.chord) {
         if (e.type == 'Rest') {

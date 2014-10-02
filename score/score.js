@@ -1,6 +1,9 @@
 
 function Score() {
   this.parts = [];
+  this.setTempo('1/4=120');
+  this.setKey('CMaj');
+  this.setMeter('4/4');
 };
 
 function trim(str) {
@@ -83,6 +86,19 @@ Score.prototype.reformatLine = function(n, x) {
 
 };
 
+Score.prototype.setTempo = function(value) {
+  this.tempo = new Score.Tempo(value);
+};
+
+Score.prototype.setKey = function(value) {
+  this.key = Score.Key.parse(value);
+};
+
+Score.prototype.setMeter = function(value) {
+  var match = value.match(/(\d)\/(\d)/);
+  this.meter = new Score.Meter(parseInt(match[1]), parseInt(match[2]));
+};
+
 Score.prototype.parseABC = function(abc) {
   var parser, elements, staff;
   var line, lines = trim(abc).split(/\n+/);
@@ -92,8 +108,6 @@ Score.prototype.parseABC = function(abc) {
       lines.splice(i--, 1);
   }
 
-  this.key = Score.Key.parse('CMaj');
-  this.meter = new Score.Meter(4, 4);
   while (true) {
     line = lines.shift();
     if (!(elements = line.match(/[CTKLM]:(.+)/))) {
@@ -112,6 +126,9 @@ Score.prototype.parseABC = function(abc) {
       break;
     case 'K':
       this.key = Score.Key.parse(value);
+      break;
+    case 'Q':
+      this.setTempo(value);
       break;
     case 'L':
       switch(value) {
