@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <title>Gradus</title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'index' %>
+    <%= csrf_meta_tags %>
 
     <script type="text/javascript" src="lib/svg.js"></script>
 
@@ -19,33 +23,6 @@
     <script type="text/javascript" src="lib/midi/stream.js"></script>
     <script type="text/javascript" src="lib/init_midi.js"></script>
 
-    <script type="text/javascript" src="score/score.js"></script>
-    <script type="text/javascript" src="score/score.staff_element.js"></script>
-    <script type="text/javascript" src="score/score.tickable.js"></script>
-    <script type="text/javascript" src="score/score.set.js"></script>
-
-    <script type="text/javascript" src="score/score.glyph.js"></script>
-    <script type="text/javascript" src="score/score.break.js"></script>
-    <script type="text/javascript" src="score/score.format.js"></script>
-    <script type="text/javascript" src="score/score.glyphs.js"></script>
-    <script type="text/javascript" src="score/score.key.js"></script>
-    <script type="text/javascript" src="score/score.tempo.js"></script>
-    <script type="text/javascript" src="score/score.measure.js"></script>
-    <script type="text/javascript" src="score/score.meter.js"></script>
-    <script type="text/javascript" src="score/score.part.js"></script>
-    <script type="text/javascript" src="score/score.staff.js"></script>
-    <script type="text/javascript" src="score/score.bar.js"></script>
-    <script type="text/javascript" src="score/score.chord.js"></script>
-    <script type="text/javascript" src="score/score.grace.js"></script>
-    <script type="text/javascript" src="score/score.slur.js"></script>
-    <script type="text/javascript" src="score/score.tuplet.js"></script>
-    <script type="text/javascript" src="score/score.note.js"></script>
-    <script type="text/javascript" src="score/score.rest.js"></script>
-    <script type="text/javascript" src="score/score.chord.js"></script>
-    <script type="text/javascript" src="score/score.midiwriter.js"></script>
-    <script type="text/javascript" src="score/score.midianimate.js"></script>
-    <script type="text/javascript" src="score/score.abc.js"></script>
-
     <script type="text/javascript" src="gradus.js"></script>
     <script type="text/javascript" src="keybindings.js"></script>
     <script type="text/javascript" src="storage.js"></script>
@@ -53,11 +30,13 @@
     <script type="text/javascript" src="rules/constraints.js"></script>
     <script type="text/javascript" src="rules/1st_species.js"></script>
 
+
     <style>
       #library { display: none }
       .status.busy { background-color: #ffa500 }
       .status.done { background-color: #00aa00 }
     </style>
+
   </head>
   <body>
 
@@ -79,6 +58,8 @@
       <div data-name="First Species Practice #1">
         K: CMaj
         L: 1/4
+        <!--[V: Counterpoint]  d4 | c4 | e4 | f4 | d4 | a4 | f4 | g4 | d4 | ^c4 | d4-->
+        <!--[V: Counterpoint]  d4 | z4 | z4 | z4 | z4 | z4 | z4 | z4 | z4 | z4 | z4-->
         [V: Counterpoint]  z4 | z4 | z4 | z4 | z4 | z4 | z4 | z4 | z4 | z4 | z4
         [V: Cantus Firmus] D4 | F4 | E4 | D4 | G4 | F4 | A4 | G4 | F4 | E4 | D4
       </div>
