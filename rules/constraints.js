@@ -98,7 +98,7 @@ Gradus.Constraints.prototype.adjacentCounterpointNotes = function(score) {
   var curr = prev && prev.findNext(['Note', 'Rest']);
 
   if (!prev)
-    return;
+    return [];
 
   var pairs = [];
   while (curr) {
