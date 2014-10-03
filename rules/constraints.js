@@ -23,6 +23,11 @@ Gradus.Constraints.prototype.prepare = function(score) {
   return [cf, cp];
 }
 
+// TODO:
+//   Don't need to check harmonic rules over and over
+//   Maybe pass in a 3rd argument
+//     function(cf, cp, i){
+//   Rule is *allowed* to only check itself starting at `i`
 Gradus.Constraints.prototype.check = function(cf, cp) {
   var violations = [];
   for (var error, i=0; i < this.rules.length; ++i) {
