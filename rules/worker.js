@@ -29,12 +29,14 @@ importScripts(
   "../score/score.abc.js",
 
   "../rules/constraints.js",
-  "../rules/1st_species.js"
+  "../rules/theory.js",
+  "../rules/theory.1st_species.js"
 );
 
 onmessage = function(message) {
   var score = Score.parseABC(message.data);
-  var futures = Gradus.FirstSpecies.elaborate(score);
+  var parts = Gradus.FirstSpecies.prepare(score);
+  var futures = Gradus.FirstSpecies.elaborate(parts[0], parts[1]);
 
   var chords = [];
   var counterpoint = score.parts[0];
@@ -46,8 +48,8 @@ onmessage = function(message) {
     });
 
     var chord = [];
-    for (var pitch in pitches)
-      chord.push(pitch);
+    for (var p in pitches)
+      chord.push(Score.Note.ordToPitch(pitch(p), true))
     chords.push(chord);
   });
 

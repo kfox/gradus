@@ -9,6 +9,7 @@ Score.Note.prototype.type = 'Note';
 Score.Note.ORDINALS = {};
 Score.Note.CHROMATIC_ORDINALS = {};
 Score.Note.PITCHES = {};
+Score.Note.CHROMATIC_PITCHES = {};
 
 Score.Note.prototype.ord = function(chromatic) {
   var pitch = this.opts.accidentals + this.opts.pitch;
@@ -50,28 +51,43 @@ Score.Note.pitchToOrd = function(pitch, chromatic) {
   return bases[key] + shift;
 };
 
-Score.Note.ordToPitch = function(ord) {
-  // Note: there's no chromatic version of this method
-  if (this.PITCHES[ord])
-    return this.PITCHES[ord];
+Score.Note.ordToPitch = function(ord, chromatic) {
+  var cache = chromatic ? this.PITCHES : this.CHROMATIC_PITCHES;
+  if (cache[ord])
+    return cache[ord];
 
   var shift = '';
   var normalizedOrd = ord;
-  while (normalizedOrd < 21) {
+  var octaveShift = chromatic ? 12 : 7;
+  var middleC = chromatic ? 60 : 21;
+  var trebleB = chromatic ? 83 : 34;
+  while (normalizedOrd < middleC) {
     shift += ",";
-    normalizedOrd += 7;
+    normalizedOrd += octaveShift;
   }
-  while (normalizedOrd > 34) {
+  while (normalizedOrd > trebleB) {
     shift += "'";
-    normalizedOrd -= 7;
+    normalizedOrd -= octaveShift;
   }
-  var bases = {
-    21: 'C', 22: 'D', 23: 'E', 24: 'F', 25: 'G', 26: 'A', 27: 'B',
-    28: 'c', 29: 'd', 30: 'e', 31: 'f', 32: 'g', 33: 'a', 34: 'b'
-  };
+  var bases, acc = '';
+  if (chromatic) {
+    bases = {
+      60: 'C', 62: 'D', 64: 'E', 65: 'F', 67: 'G', 69: 'A', 71: 'B',
+      72: 'c', 74: 'd', 76: 'e', 77: 'f', 79: 'g', 81: 'a', 83: 'b'
+    };
+    if (!bases[normalizedOrd]) {
+      acc = '^';
+      normalizedOrd -= 1;
+    }
+  } else {
+    bases = {
+      21: 'C', 22: 'D', 23: 'E', 24: 'F', 25: 'G', 26: 'A', 27: 'B',
+      28: 'c', 29: 'd', 30: 'e', 31: 'f', 32: 'g', 33: 'a', 34: 'b'
+    };
+  }
 
-  this.PITCHES[ord] = bases[normalizedOrd] + shift;
-  return bases[normalizedOrd] + shift;
+  cache[ord] = acc + bases[normalizedOrd] + shift;
+  return acc + bases[normalizedOrd] + shift;
 };
 
 Score.Note.prototype.glyphValue = function() {
