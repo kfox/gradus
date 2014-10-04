@@ -62,7 +62,8 @@ $(document).ready(function() {
 
 (function() {
   var pitchFromEvent = function(part, measure, e) {
-    var off = Math.floor(2*(e.offsetY-measure.renderYOffset)/Score.Staff.LINE_HEIGHT);
+    var y = e.offsetY || (e.clientY - $('#score').offset().top);
+    var off = Math.floor(2*(y-measure.renderYOffset)/Score.Staff.LINE_HEIGHT);
     return part.offsetToPitch(off);
   };
 
