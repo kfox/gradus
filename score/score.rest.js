@@ -1,5 +1,5 @@
 Score.Rest = function(opts) {
-  this.opts = opts;
+  this.value = opts.value || '1';
 };
 Score.Rest.prototype = new Score.Tickable();
 Score.Rest.prototype.type = 'Rest';

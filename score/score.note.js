@@ -1,6 +1,10 @@
 Score.Note = function(opts) {
-  this.opts = opts;
-  this.opts.accidentals = this.opts.accidentals || '';
+  this.pitch = opts.pitch || 'C';
+  this.accidentals = opts.accidentals || '';
+  this.value = opts.value || '1';
+  this.swing = opts.swing;
+  this.beam = opts.beam;
+  this.tie = opts.tie;
 };
 Score.Note.prototype = new Score.Tickable();
 Score.Note.prototype.type = 'Note';
@@ -12,7 +16,7 @@ Score.Note.PITCHES = {};
 Score.Note.CHROMATIC_PITCHES = {};
 
 Score.Note.prototype.ord = function(chromatic) {
-  var pitch = this.opts.accidentals + this.opts.pitch;
+  var pitch = this.accidentals + this.pitch;
   return Score.Note.pitchToOrd(pitch, chromatic);
 };
 
@@ -107,8 +111,8 @@ Score.Note.prototype.glyphValue = function() {
 };
 
 Score.Note.prototype.isDotted = function() {
-  var swing = this.opts.swing;
-  switch(this.opts.value) {
+  var swing = this.swing;
+  switch(this.value) {
   case '/2':
   case '1':
   case '2':
@@ -134,47 +138,47 @@ Score.Note.prototype.flags = function() {
 };
 
 Score.Note.prototype.isBeamed = function() {
-  if (this.opts.beam)
+  if (this.beam)
     return true;
 
   var next = this.findPrev(['Note', 'Rest']);
-  return next && next.opts.beam;
+  return next && next.beam;
 };
 
 Score.Note.prototype.isBeamStart = function(strict) {
   var next = this.findNext(['Note', 'Rest'], {neighbor: true});
-  var beamed = this.opts.beam && next && next.type == 'Note';
+  var beamed = this.beam && next && next.type == 'Note';
   if (strict) {
     var prev = this.findPrev(['Note', 'Rest'], {neighbor: true});
-    return beamed && (!prev || !prev.opts.beam);
+    return beamed && (!prev || !prev.beam);
   }
   return beamed;
 };
 
 Score.Note.prototype.beamNext = function() {
-  if (!this.opts.beam)
+  if (!this.beam)
     return null;
   var next = this.findNext(['Note', 'Rest'], {neighbor: true});
   return next && next.type == 'Note' && next;
 };
 
 Score.Note.prototype.beamEnd = function() {
-  if (!this.opts.beam)
+  if (!this.beam)
     return this;
   var next = this.findNext(['Note', 'Rest'], {neighbor: true});
   return next ? (next.type == 'Note' ? next.beamEnd() : this) : this;
 };
 
 Score.Note.prototype.isSharp = function() {
-  return this.opts.accidentals.indexOf('^') != -1;
+  return this.accidentals.indexOf('^') != -1;
 };
 
 Score.Note.prototype.isFlat = function() {
-  return this.opts.accidentals.indexOf('_') != -1;
+  return this.accidentals.indexOf('_') != -1;
 };
 
 Score.Note.prototype.isNatural = function() {
-  return this.opts.accidentals.indexOf('=') != -1;
+  return this.accidentals.indexOf('=') != -1;
 };
 
 Score.Note.prototype.motion = function(note) {

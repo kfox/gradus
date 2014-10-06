@@ -24,12 +24,12 @@ Score.Chord.prototype.render = function(svg, x, y) {
   notes.sort(function(n1, n2) { return n1.ord(true) - n2.ord(true); });
   for (var i=1; i < notes.length; ++i)
     if (notes[i].ord(true) - notes[i-1].ord(true) <= 2)
-      seconds[notes[i].opts.pitch] = seconds[notes[i-1].opts.pitch] = true;
+      seconds[notes[i].pitch] = seconds[notes[i-1].pitch] = true;
 
   var toggle = false;
   var accidentals = [];
   for (var right, i = notes.length-1; i >= 0; --i) {
-    toggle = seconds[notes[i].opts.pitch] ? !toggle : toggle;
+    toggle = seconds[notes[i].pitch] ? !toggle : toggle;
     notes[i].render(this.avatar, x, y, {
       right: toggle,
       accidentals: accidentals

@@ -15,17 +15,16 @@ Score.Tickable.prototype.isTriplet = function() {
 };
 
 Score.Tickable.prototype.ticks = function() {
-  var opts = this.opts;
   var ticks = this.part.unitNoteValue();
   var prev = this.findPrev(['Note', 'Rest']);
-  var dswing = prev && prev.opts.swing;
-  var uswing = opts.swing;
+  var dswing = prev && prev.swing;
+  var uswing = this.swing;
 
-  if (opts.value.indexOf('/') != -1) {
-    var parts = (opts.value[0]=='/' ? ('1'+opts.value) : opts.value).split('/');
+  if (this.value.indexOf('/') != -1) {
+    var parts = (this.value[0]=='/' ? ('1'+this.value) : this.value).split('/');
     ticks *= parseInt(parts[0]) / parseInt(parts[1]);
   } else {
-    ticks *= parseInt(opts.value);
+    ticks *= parseInt(this.value);
   }
 
   if (this.isTriplet()) {
@@ -50,12 +49,12 @@ Score.Tickable.prototype.ticks = function() {
 // For Rest and Note
 Score.Tickable.prototype.toABC = function() {
   var abc = '';
-  abc += this.opts.accidentals || '';
-  abc += this.type == 'Rest' ? 'z' : this.opts.pitch;
-  abc += (this.opts.value == '1' ? '' : this.opts.value);
-  if (!this.opts.beam)
+  abc += this.accidentals || '';
+  abc += this.type == 'Rest' ? 'z' : this.pitch;
+  abc += (this.value == '1' ? '' : this.value);
+  if (!this.beam)
     abc += ' ';
-  if (this.opts.tie)
+  if (this.tie)
     abc += '-';
   return abc;
 };

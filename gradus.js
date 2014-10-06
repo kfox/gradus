@@ -44,7 +44,7 @@ Gradus = {
         var counterpoint = score.parts[0];
         counterpoint.findAll(['Rest', 'Chord']).forEach(function(el, iel) {
           var chord = new Score.Chord();
-          var value = (el.type == 'Rest') ? el.opts.value : el.notes[0].opts.value;
+          var value = (el.type == 'Rest') ? el.value : el.notes[0].value;
           // TODO: measure.replace should call setMeasure()
           // setMeasure on chord should call it on its notes
           // and also find better way to set up part, score
@@ -72,7 +72,7 @@ Gradus = {
 
       var counterpoint = score.parts[0];
       counterpoint.findAll('Chord').forEach(function(chord) {
-        var rest = new Score.Rest({ value: chord.notes[0].opts.value });
+        var rest = new Score.Rest({ value: chord.notes[0].value });
         rest.measure = chord.measure;
         rest.score = chord.notes[0].score;
         rest.part = chord.notes[0].part;
