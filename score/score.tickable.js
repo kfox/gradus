@@ -49,11 +49,16 @@ Score.Tickable.prototype.ticks = function() {
 Score.Tickable.prototype.change = function(opts) {
   var type = opts.type || this.type;
   var f = (type == 'Note') ? Score.Note : Score.Rest;
-  var obj = (opts.type || opts.clone) ? new f() : this;
+  var obj = (opts.type || opts.clone) ? new f(opts) : this;
   obj.value = opts.value || this.value || obj.value;
   if (f == Score.Note) {
     obj.pitch = opts.pitch || this.pitch || obj.pitch;
-    obj.accidentals = opts.accidentals || this.accidentals || obj.accidentals;
+    if (typeof opts.accidentals == 'undefined') {
+      if (typeof this.accidentals != 'undefined')
+        obj.accidentals = this.accidentals;
+    } else {
+      obj.accidentals = opts.accidentals;
+    }
     obj.swing = opts.swing || this.swing;
     obj.beam = opts.beam || this.beam;
     obj.tie = opts.tie || this.tie;

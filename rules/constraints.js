@@ -62,7 +62,8 @@ Gradus.Constraints.prototype.elaborate = function(cf, cp, iprev) {
   var futures = [];
   var cfNote = cf[restIndex];
   var theRest = cp[restIndex];
-  var possibilities = this.naiveSonorities(cfNote, rest, cp[iprev]);
+  var possibilities = this.naiveSonorities(cfNote, rest, cp[iprev],
+                                          restIndex == cp.length-2);
   for (var i=0; i < possibilities.length; ++i) {
     cp[restIndex] = possibilities[i];
     this.elaborate(cf, cp, restIndex).forEach(function(set) {

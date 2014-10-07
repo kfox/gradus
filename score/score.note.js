@@ -2,6 +2,10 @@ Score.Note = function(opts) {
   opts = opts || {};
   this.pitch = opts.pitch || 'C';
   this.accidentals = opts.accidentals || '';
+  if (this.pitch.match(/^[=_^]/)) {
+    this.accidentals = this.pitch.match(/^[=_^]/)[0];
+    this.pitch = this.pitch.replace(/^[=_^]/, '');
+  }
   this.value = opts.value || '1';
   this.swing = opts.swing;
   this.beam = opts.beam;

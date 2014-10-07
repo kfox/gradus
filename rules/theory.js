@@ -1,4 +1,34 @@
 
+Score.Theory = {
+  mode: []
+};
+
+(function() {
+  var dorian = [2, 1, 2, 2, 2, 1, 2];
+  var pitches = {
+    'A': 21, 'B': 23, 'C': 24, 'D': 26, 'E': 28, 'F': 29, 'G': 31
+  };
+
+  var base, mode, pitch;
+  for (var tonic in pitches) {
+    base = pitches[tonic];
+    if (typeof base == 'undefined')
+      continue;
+    mode = Score.Theory[tonic+'_DORIAN'] = [];
+
+    i = 0;
+    pitch = base;
+    while (pitch <= 108) {
+      mode.push(pitch);
+      pitch += dorian[i]
+      i = (i + 1) % 7;
+    }
+  }
+
+})();
+
+Score.Theory.mode = Score.Theory.D_DORIAN;
+
 function noteToUInt32(note) {
   var u = (note.type == 'Note' ? note.ord(true) : 0);
   u = u | (note.ticks() << 8);
@@ -8,6 +38,19 @@ function noteToUInt32(note) {
 function translate(note, semitones) {
   var p = pitch(note) + semitones;
   return (note & 0xffffff00) | p;
+}
+
+function naturalTranslate(note, interval) {
+  var p = pitch(note);
+  var i = Score.Theory.mode.indexOf(p);
+
+  if (rest(note))
+    return note;
+
+  if (i == -1)
+    throw "couldn't locate scale degree of "+pitch(note);
+
+  return (duration(note) << 8) | Score.Theory.mode[i+interval];
 }
 
 function duration(note) {
@@ -70,29 +113,6 @@ function dissonant(interval) {
 
 function tritone(interval) {
   return interval == 6;
-}
-
-function consonances(note) {
-  if (rest(note))
-    return [];
-  switch((pitch(note)-21) % 12) {
-  case 0:
-    return [0, 3, -4, 7, -7, 8, -9];
-  case 2:
-    return [0, 3, -4, -7, 8, -9];
-  case 3:
-    return [0, 4, -3, 7, -7, 9, -8];
-  case 5:
-    return [0, 3, -3, 7, -7, 9, -9];
-  case 7:
-    return [0, 3, -4, 7, -7, 8, -9];
-  case 8:
-    return [0, 4, -3, 7, 9, -8];
-  case 10:
-    return [0, 4, -3, 7, -7, 9, -8];
-  default:
-    return [];
-  }
 }
 
 function range(voice) {

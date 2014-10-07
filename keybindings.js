@@ -49,6 +49,16 @@ $(document).ready(function() {
     Gradus.animator.animate(MIDI.Player);
   });
 
+  key('shift+=', function(e) {
+    var selected = Gradus.getSelected();
+    if (selected) {
+      selected.change({
+        accidentals: selected.isSharp() ? '' : '^'
+      });
+      Gradus.replace(selected, selected);
+    }
+  });
+
   $('#controls input[name=bpm]').change(function(e) {
     var val = $(this).val();
     if (val.match(/^\d+$/) && parseInt(val) > 0) {

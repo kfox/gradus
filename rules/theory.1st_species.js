@@ -4,16 +4,18 @@ Gradus.FirstSpecies = new Gradus.Constraints();
 
 // Return a first guess at which notes could go on top of
 // a cf, in place of a rest
-Gradus.FirstSpecies.naiveSonorities = function(bass, rest, prev) {
-  var notes = [];
-  var offsets = consonances(bass);
-  for (var i=0; i < offsets.length; ++i)
-    notes.push(translate(bass, offsets[i]));
+Gradus.FirstSpecies.naiveSonorities = function(bass, rest, prev, penultimate) {
+  if (penultimate)
+    return [translate(bass, 9)];
 
-  notes.push(translate(bass, 12));
-  notes.push(translate(bass, -12));
-  notes.push(translate(bass, 12+offsets[1]));
-  notes.push(translate(bass, -12+offsets[2]));
+  var notes = [
+    bass,                                                  // unison
+    naturalTranslate(bass, 2), naturalTranslate(bass, -2), // thirds
+    naturalTranslate(bass, 4), naturalTranslate(bass, -4), // fifths
+    naturalTranslate(bass, 5), naturalTranslate(bass, -5), // sixths
+    translate(bass, 12), translate(bass, -12),             // octaves
+    naturalTranslate(bass, 9), naturalTranslate(bass, -9)  // tenths
+  ];
 
   if (prev) {
     // Short-cut the check for travel by tritone or >= major sixth
@@ -104,9 +106,9 @@ Gradus.FirstSpecies.rules = [
     var ival = interval(n2, n1);
     if (!n1 || !n2 || rest(n1) || rest(n2))
       return;
-    if (ival != 9 && ival != 8)
+    if (ival != 9)
       return new Violation('Second to last note must create a major 6th',
-                           {cp: [cp.length-1]});
+                           {cp: [cp.length-2]});
   }
 
 ];
