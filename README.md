@@ -26,7 +26,6 @@ npm install testem -g
 3) Run tests from the **project root**
 
 ```
-cd tests
 testem
 ```
 
