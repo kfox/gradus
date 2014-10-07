@@ -46,6 +46,25 @@ Score.Tickable.prototype.ticks = function() {
 };
 
 
+Score.Tickable.prototype.change = function(opts) {
+  var type = opts.type || this.type;
+  var f = (type == 'Note') ? Score.Note : Score.Rest;
+  var obj = (opts.type || opts.clone) ? new f() : this;
+  obj.value = opts.value || this.value || obj.value;
+  if (f == Score.Note) {
+    obj.pitch = opts.pitch || this.pitch || obj.pitch;
+    obj.accidentals = opts.accidentals || this.accidentals || obj.accidentals;
+    obj.swing = opts.swing || this.swing;
+    obj.beam = opts.beam || this.beam;
+    obj.tie = opts.tie || this.tie;
+  }
+  return obj;
+};
+
+Score.Tickable.prototype.clone = function() {
+    return this.change({ clone: true });
+};
+
 // For Rest and Note
 Score.Tickable.prototype.toABC = function() {
   var abc = '';

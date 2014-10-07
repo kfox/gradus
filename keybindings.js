@@ -24,7 +24,7 @@ $(document).ready(function() {
     var below = selected.part.below(selected);
     below && below.removeText();
 
-    var rest = new Score.Rest({ value: selected.value });
+    var rest = selected.change({ type: 'Rest' });
     Gradus.replace(selected, rest);
 
     Gradus.stopDragging();
@@ -82,12 +82,14 @@ $(document).ready(function() {
     Gradus.startDragging();
 
     if (target.hyperGradus) {
-      selected = new Score.Note({ pitch: target.pitch,
-                                  value: target.value });
+      selected = target.clone();
       Gradus.replace(target.chord, selected);
     } else {
-      target.pitch = target.pitch || pitchFromEvent(this.part, this, e);
-      selected = new Score.Note(target);
+      selected = target.change({
+        type: 'Note',
+        pitch: target.pitch || pitchFromEvent(this.part, this, e),
+        clone: true
+      });
       Gradus.replace(target, selected);
     }
 
@@ -108,7 +110,7 @@ $(document).ready(function() {
     if (selected.pitch == pitch)
       return;
 
-    selected.pitch = pitch;
+    selected.change({ pitch: pitch });
     Gradus.replace(selected, selected);
   };
 

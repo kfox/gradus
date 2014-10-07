@@ -1,4 +1,5 @@
 Score.Note = function(opts) {
+  opts = opts || {};
   this.pitch = opts.pitch || 'C';
   this.accidentals = opts.accidentals || '';
   this.value = opts.value || '1';
