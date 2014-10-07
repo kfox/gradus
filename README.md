@@ -23,7 +23,7 @@ npm install chai
 npm install testem -g
 ```
 
-3) Run tests from the test dir
+3) Run tests from the **project root**
 
 ```
 cd tests
