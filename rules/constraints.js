@@ -120,23 +120,3 @@ Gradus.Constraints.prototype.notify = function(score, container) {
     });
   }
 };
-
-Gradus.Constraints.prototype.adjacentCounterpointNotes = function(score) {
-  var counterpoint = score.parts[0];
-
-  var prev = counterpoint.find('Note');
-  var curr = prev && prev.findNext(['Note', 'Rest']);
-
-  if (!prev)
-    return [];
-
-  var pairs = [];
-  while (curr) {
-    if (prev.type == 'Note' && curr.type == 'Note')
-      pairs.push([prev, curr]);
-    prev = curr;
-    curr = curr.findNext(['Note', 'Rest']);
-  }
-
-  return pairs;
-};
