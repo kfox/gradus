@@ -105,7 +105,12 @@ Gradus = {
   },
 
   load: function(source) {
-    this.score = Score.parseABC(source);
+    try {
+      this.score = Score.parseABC(source);
+    } catch (e) {
+      return $('#messages').text('Error parsing ABC');
+    }
+
     this.score.render($('#score')[0], {
       showIntervals: true,
       events: this.keyBindings
@@ -117,6 +122,6 @@ Gradus = {
 };
 
 $(document).ready(function() {
-  var source = $('#library >*').text();
+  var source = getSharedABC() || $('#library >*').text();
   Gradus.load(source);
 });

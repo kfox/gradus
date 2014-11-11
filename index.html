@@ -49,6 +49,7 @@
     <script type="text/javascript" src="gradus.js"></script>
     <script type="text/javascript" src="keybindings.js"></script>
     <script type="text/javascript" src="storage.js"></script>
+    <script type="text/javascript" src="sharing.js"></script>
 
     <script type="text/javascript" src="rules/constraints.js"></script>
     <script type="text/javascript" src="rules/theory.js"></script>
@@ -70,6 +71,10 @@
       <label style="margin-left: 18px">bpm: <input name="bpm" /></label>
       <label style="margin-left: 18px">load: <select name="source"></select></label>
       <button style="margin-left: 18px" name="save">save</button>
+      <button style="margin-left: 18px" name="share">share</button>
+      <div style="padding-top: 8px; display: none" id="share-url-holder">
+        URL: <input style="width: 700px" />
+      </div>
     </div>
 
     <div id="score"></div>
