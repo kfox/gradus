@@ -41,7 +41,7 @@ Gradus = {
         if (!chords.length || chords[0].length == 0) // failed to find a solution
           return;
 
-        var counterpoint = score.parts[0];
+        var counterpoint = score.part('Counterpoint');
         counterpoint.findAll(['Rest', 'Chord']).forEach(function(el, iel) {
           var chord = new Score.Chord();
           var value = (el.type == 'Rest') ? el.value : el.notes[0].value;
@@ -70,7 +70,7 @@ Gradus = {
       var score = Gradus.score;
       this.onSolutionReady(null);
 
-      var counterpoint = score.parts[0];
+      var counterpoint = score.part('Counterpoint');
       counterpoint.findAll('Chord').forEach(function(chord) {
         var rest = new Score.Rest({ value: chord.notes[0].value });
         rest.measure = chord.measure;

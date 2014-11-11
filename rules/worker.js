@@ -36,10 +36,10 @@ importScripts(
 onmessage = function(message) {
   var score = Score.parseABC(message.data);
   var parts = Gradus.FirstSpecies.prepare(score);
-  var futures = Gradus.FirstSpecies.elaborate(parts[0], parts[1]);
+  var futures = Gradus.FirstSpecies.elaborate(parts);
 
   var chords = [];
-  var counterpoint = score.parts[0];
+  var counterpoint = score.part('Counterpoint');
   counterpoint.findAll('Rest').forEach(function(rest, irest) {
     var pitches = {};
     var bass = counterpoint.below(rest);

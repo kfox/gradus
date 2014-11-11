@@ -68,13 +68,17 @@ Score.Measure.prototype.prerender = function(svg, yoffset) {
   for (var e, g, below, i=0; i < this.elements.length; ++i) {
     e = this.elements[i];
     e.render(svg, 0, yoffset);
-    if (!this.part.score.options.showIntervals)
+    if (!this.part.score.options.showIntervals || e.type != 'Note')
       continue;
-    if (e.type == 'Note' && (below = this.part.below(e))) {
-      if (below.type != 'Note')
-        continue;
+
+    var above, below;
+    if ((below = this.part.below(e)))
+      above = e;
+    else if ((above = this.part.above(e)))
+      below = e;
+
+    if (above && below && above.type == 'Note' && below.type == 'Note')
       below.addText(below.interval(e).name);
-    }
   }
 };
 

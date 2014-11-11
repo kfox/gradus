@@ -10,17 +10,24 @@ Gradus.Constraints.Violation = function(message, elements) {
 };
 
 Gradus.Constraints.prototype.prepare = function(score) {
-  var cf = score.part('Cantus Firmus');
-  var cp = score.parts[0];
+  var parts = new Score.Theory.Score();
+
+  var cf, cp, cfOnTop;
+  cf = score.part('Cantus Firmus');
+  cp = score.part('Counterpoint');
+  cfOnTop = (cf == score.parts[0]);
+
   cp = cp.findAll(['Note', 'Rest', 'Chord']);
   cf = cf.findAll(['Note', 'Rest', 'Chord']);
 
   for (var i=0; i < cf.length; ++i)
-    cf[i] = noteToUInt32(cf[i]);
+    parts.cf[i] = noteToUInt32(cf[i]);
   for (var i=0; i < cp.length; ++i)
-    cp[i] = noteToUInt32(cp[i]);
+    parts.cp[i] = noteToUInt32(cp[i]);
 
-  return [cf, cp];
+  parts.cantusFirmusOnTop = cfOnTop;
+
+  return parts;
 }
 
 // TODO:
@@ -28,10 +35,10 @@ Gradus.Constraints.prototype.prepare = function(score) {
 //   Maybe pass in a 3rd argument
 //     function(cf, cp, i){
 //   Rule is *allowed* to only check itself starting at `i`
-Gradus.Constraints.prototype.check = function(cf, cp) {
+Gradus.Constraints.prototype.check = function(parts) {
   var violations = [];
   for (var error, i=0; i < this.rules.length; ++i) {
-    if ((error = this.rules[i].call(this, cf, cp)))
+    if ((error = this.rules[i].call(this, parts)))
       violations.push(error);
   }
 
@@ -40,11 +47,13 @@ Gradus.Constraints.prototype.check = function(cf, cp) {
   return [true, violations];
 };
 
-Gradus.Constraints.prototype.elaborate = function(cf, cp, iprev) {
+Gradus.Constraints.prototype.elaborate = function(parts, iprev) {
   // If the score is already invalid, there are no possible
   // notes in the future
-  if (!this.check(cf, cp)[0])
+  if (!this.check(parts)[0])
     return [];
+
+  var cf = parts.cf, cp = parts.cp;
 
   var restIndex = -1;
   for (var i = iprev || 0; i < cp.length; ++i)
@@ -66,7 +75,7 @@ Gradus.Constraints.prototype.elaborate = function(cf, cp, iprev) {
                                           restIndex == cp.length-2);
   for (var i=0; i < possibilities.length; ++i) {
     cp[restIndex] = possibilities[i];
-    this.elaborate(cf, cp, restIndex).forEach(function(set) {
+    this.elaborate(parts, restIndex).forEach(function(set) {
       set.unshift(possibilities[i]);
       futures.push(set);
     });
@@ -78,7 +87,7 @@ Gradus.Constraints.prototype.elaborate = function(cf, cp, iprev) {
 
 Gradus.Constraints.prototype.notify = function(score, container) {
   var parts = this.prepare(score);
-  var result = this.check(parts[0], parts[1]);
+  var result = this.check(parts);
   var violations = this.violations;
   container.empty();
 
@@ -91,7 +100,7 @@ Gradus.Constraints.prototype.notify = function(score, container) {
     });
 
     violation.elements.cp.forEach(function(i) {
-      var v = score.parts[0];
+      var v = score.part('Counterpoint');
       v.measures[i].elements.forEach(function(e) {
         e.type == 'Note' && e.avatar && e.avatar.fill('#000');
       });
@@ -110,7 +119,7 @@ Gradus.Constraints.prototype.notify = function(score, container) {
       });
 
       violation.elements.cp.forEach(function(i) {
-        var v = score.parts[0];
+        var v = score.part('Counterpoint');
         v.measures[i].elements.forEach(function(e) {
           e.type == 'Note' && e.avatar && e.avatar.fill('#f00');
         });

@@ -29,6 +29,13 @@ Score.Theory = {
 
 Score.Theory.mode = Score.Theory.D_DORIAN;
 
+// This is a pared down Score, for use in gradus.
+Score.Theory.Score = function() {
+  this.cf = [];
+  this.cp = [];
+  this.cantusFirmusOnTop = false;
+};
+
 function noteToUInt32(note) {
   var u = (note.type == 'Note' ? note.ord(true) : 0);
   u = u | (note.ticks() << 8);
