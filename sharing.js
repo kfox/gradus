@@ -1,15 +1,20 @@
 
 function getSharedABC() {
-  var urlSource = location.search.match(/s=([^&]+)/);
-  if (urlSource)
-    return decodeURIComponent(urlSource[1]);
+  var abc, urlSource = location.search.match(/s=([^&]+)/);
+  if (urlSource) {
+    abc = decodeURIComponent(urlSource[1]);
+    return abc.replace('Cantus_Firmus', 'Cantus Firmus');
+  }
   return null;
 }
 
 $(document).ready(function() {
   $('#controls button[name=share]').click(function() {
-    var abc = Gradus.score.toABC();
-    var url = location.origin + location.pathname + '?s='+encodeURIComponent(abc);
+    var url, abc = Gradus.score.toABC();
+    abc = abc.replace('Cantus Firmus', 'Cantus_Firmus');
+    abc = encodeURIComponent(abc.replace(/[ \t]/g, ''));
+    abc = abc.replace(/%7C/g, '|');
+    url = location.origin + location.pathname + '?s='+abc;
 
     $('#share-url-holder').slideDown(150).
       find('input').val(url);
