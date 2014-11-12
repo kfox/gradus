@@ -208,8 +208,7 @@ Score.Note.prototype.interval = function(note) {
 
   var interval = {
     notes: (myOrd < itsOrd) ? [this, note] : [note, this],
-    semitones: semitones,
-    perfect: false, consonant: false
+    semitones: semitones
   };
 
   while (semitones > 12)
@@ -219,46 +218,42 @@ Score.Note.prototype.interval = function(note) {
   switch(semitones) {
   case 0:
     interval.name ='P1';
-    interval.consonant = true;
-    interval.perfect = true;
     break;
   case 1:
+    interval.name = 'm2';
+    break;
   case 2:
-    interval.name ='2';
+    interval.name = 'M2';
     break;
   case 3:
+    interval.name = 'm3';
+    break;
   case 4:
-    interval.name ='3';
-    interval.consonant = true;
+    interval.name = 'M3';
     break;
   case 5:
-    interval.name ='P4';
-    interval.perfect = true;
+    interval.name = 'P4';
     break;
   case 6:
-    interval.name ='Tri';
-    interval.tritone = true;
+    interval.name = 'Tri';
     break;
   case 7:
     interval.name ='P5';
-    interval.consonant = true;
-    interval.perfect = true;
     break;
   case 8:
+    interval.name ='m6';
+    break;
   case 9:
-    interval.name ='6';
-    interval.consonant = true;
+    interval.name ='M6';
     break;
   case 10:
-    interval.name ='7';
+    interval.name ='m7';
     break;
   case 11:
-    interval.name ='7+';
+    interval.name ='M7';
     break;
   case 12:
     interval.name ='P8';
-    interval.consonant = true;
-    interval.perfect = true;
     break;
   }
 
