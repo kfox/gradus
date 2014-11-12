@@ -1,6 +1,45 @@
 
 Score.Theory = {
-  mode: []
+  mode: [],
+
+  inferMode: function(key, tonic) {
+    var keyTonic = key.tonic;
+    while (tonic - 21 >= 12)
+      tonic -= 12;
+
+    var offset = tonic - keyTonic;
+    if (offset < 0)
+      offset += 12;
+
+    var mode = null;
+    switch(offset) {
+    case 0:
+      mode = 'IONIAN';
+      break;
+    case 2:
+      mode = 'DORIAN';
+      break;
+    case 4:
+      mode = 'PHRYGIAN';
+      break;
+    case 5:
+      mode = 'LYDIAN';
+    case 7:
+      mode = 'MIXOLYDIAN';
+      break;
+    case 9:
+      mode = 'AEOLIAN';
+      break;
+    case 11:
+      mode = 'LOCRIAN';
+      break;
+    default:
+      throw "Couldn't infer mode";
+    }
+
+    tonic = Score.Note.ordToPitch(tonic, true)[0].toUpperCase();
+    this.mode = this[tonic + '_' + mode];
+  }
 };
 
 (function() {

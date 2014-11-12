@@ -97,9 +97,18 @@ Gradus = {
     this._dragging = false;
   },
 
+  inferMode: function() {
+    var elements = this.score.part('Cantus Firmus').findAll(['Note', 'Rest']);
+    var tonic = elements[elements.length-1];
+    if (tonic.type == 'Note')
+      Score.Theory.inferMode(this.score.key, tonic.ord(true));
+  },
+
   replace: function(e1, e2) {
     var score = this.score;
     e1.measure.replace(e1, e2);
+
+    Gradus.inferMode();
     Gradus.FirstSpecies.notify(score, $('#messages'));
     Gradus.Hyper.solve();
   },
@@ -111,10 +120,13 @@ Gradus = {
       return $('#messages').text('Error parsing ABC');
     }
 
+    Gradus.inferMode();
+
     this.score.render($('#score')[0], {
       showIntervals: true,
       events: this.keyBindings
     });
+
     Gradus.Hyper.solve();
   },
 

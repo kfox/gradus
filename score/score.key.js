@@ -8,6 +8,7 @@ Score.Key.prototype.clone = function() {
   k.sharps = this.sharps.slice(0);
   k.flats = this.flats.slice(0);
   k.names = this.names.slice(0);
+  k.tonic = this.tonic;
   return k;
 };
 Score.Key.prototype.render = function(svg, xoffset, yoffset) {
@@ -166,3 +167,22 @@ Score.Keys.D_MINOR = new Score.Key();
 Score.Keys.D_MINOR.sharps = [];
 Score.Keys.D_MINOR.flats = ["b"];
 Score.Keys.D_MINOR.names = ["dm", "Dm", "dmin", "Dmin", "DMin"];
+
+// This is ghetto...
+(function() {
+  var tonic;
+  for (var keyName in Score.Keys) {
+    tonic = keyName[0];
+    if (keyName.match(/SHARP/))
+      tonic = '^' + tonic;
+    else if (keyName.match(/FLAT/))
+      tonic = '_' + tonic;
+    tonic = Score.Note.pitchToOrd(tonic, true);
+
+    // Normalize it to be in the A0 octave
+    while (tonic - 21 >= 12)
+      tonic -= 12;
+
+    Score.Keys[keyName].tonic = tonic;
+  }
+})();

@@ -6,6 +6,7 @@ importScripts(
   "../score/score.staff_element.js",
   "../score/score.tickable.js",
   "../score/score.set.js",
+  "../score/score.note.js",
 
   "../score/score.glyph.js",
   "../score/score.break.js",
@@ -22,7 +23,6 @@ importScripts(
   "../score/score.grace.js",
   "../score/score.slur.js",
   "../score/score.tuplet.js",
-  "../score/score.note.js",
   "../score/score.rest.js",
   "../score/score.chord.js",
   "../score/score.midiwriter.js",
