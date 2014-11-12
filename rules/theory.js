@@ -4,27 +4,24 @@ Score.Theory = {
 };
 
 (function() {
-  var dorian = [2, 1, 2, 2, 2, 1, 2];
-  var pitches = {
-    'A': 21, 'B': 23, 'C': 24, 'D': 26, 'E': 28, 'F': 29, 'G': 31
-  };
+  var modes = ['IONIAN', 'DORIAN', 'PHRYGIAN', 'LYDIAN',
+               'MIXOLYDIAN', 'AEOLIAN', 'LOCRIAN'];
+  var scale = [2, 2, 1, 2, 2, 2, 1];
 
-  var base, mode, pitch;
-  for (var tonic in pitches) {
-    base = pitches[tonic];
-    if (typeof base == 'undefined')
-      continue;
-    mode = Score.Theory[tonic+'_DORIAN'] = [];
+  for (var pitch, pitchName, notes, base=21; base <= 32; ++base) {
+    pitchName = Score.Note.ordToPitch(base, true)[0].toUpperCase();
+    for (var i, offset = 0; offset < modes.length; ++offset) {
+      notes = Score.Theory[pitchName+'_'+modes[offset]] = [];
 
-    i = 0;
-    pitch = base;
-    while (pitch <= 108) {
-      mode.push(pitch);
-      pitch += dorian[i]
-      i = (i + 1) % 7;
+      i = offset;
+      pitch = base;
+      while (pitch <= 108) {
+        notes.push(pitch);
+        pitch += scale[i];
+        i = (i + 1) % 7;
+      }
     }
   }
-
 })();
 
 Score.Theory.mode = Score.Theory.D_DORIAN;
